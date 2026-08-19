@@ -1,6 +1,8 @@
 export type LifeWant = "quiet" | "city" | "beach";
+export type PlaceId = "alicante" | "campello";
 
 export interface BuyerProfile {
+  place: PlaceId;
   maxBudgetEur: number;
   minRooms: number;
   want: LifeWant;
@@ -55,6 +57,7 @@ export interface RentOpportunity {
 
 export interface District {
   id: string;
+  placeId?: PlaceId;
   nameRu: string;
   nameEs: string;
   character: string;
@@ -69,7 +72,7 @@ export interface CityMarket {
   asOf: string;
   briefingDate: string;
   eurPerM2: number;
-  tinsaEurPerM2: number;
+  tinsaEurPerM2: number | null;
   yoyPct: number;
   threeMonthPct: number;
   spainEurPerM2: number;

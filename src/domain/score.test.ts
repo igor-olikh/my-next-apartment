@@ -107,6 +107,21 @@ describe("owner-occupier scoring", () => {
     expect(brief.ignored.some((line) => line.startsWith("Каролинас"))).toBe(false);
   });
 
+  it("El Campello is a separate town, not an Alicante barrio", () => {
+    const camp: BuyerProfile = { ...DEFAULT_PROFILE, place: "campello" };
+    const ids = recommended(camp).map((f) => f.district.id);
+    expect(ids.every((id) => id.startsWith("campello") || id === "muchavista" || id === "coveta-fuma" || id === "acantilado-lanuza")).toBe(
+      true,
+    );
+    expect(ids).toContain("campello-pueblo");
+    expect(ids).not.toContain("ensanche");
+    const beach = recommended({ ...camp, want: "beach", hasCar: true, maxBudgetEur: 320000 }).map((f) => f.district.id);
+    expect(beach).not.toContain("muchavista");
+    expect(beach.some((id) => ["campello-playa", "coveta-fuma", "acantilado-lanuza"].includes(id))).toBe(true);
+    const memo = buildBriefing({ ...camp, want: "beach", hasCar: true }).verdict;
+    expect(memo.toLowerCase()).toMatch(/кампельо|мучависта/);
+  });
+
   it("cheap listing in a high-rent street gets a rent heat flag", () => {
     const flags = flagListing(
       {

@@ -1,6 +1,6 @@
-import { CITY } from "../data/market";
-import { CITY_RENT, RENTS } from "../data/rents";
-import { DISTRICTS, districtById } from "../data/districts";
+import { marketOf } from "../data/market";
+import { PLACE_RENT, RENTS } from "../data/rents";
+import { districtById, districtsIn, placeOf } from "../data/districts";
 import { cashToMoveIn, formatMonth, grossYieldPct, typicalAsk, typicalRentMonth, typicalSqm } from "./money";
 import type {
   BuyerProfile,
@@ -112,7 +112,9 @@ export function fitDistrict(district: District, profile: BuyerProfile): District
 }
 
 export function rankDistricts(profile: BuyerProfile): DistrictFit[] {
-  return DISTRICTS.map((d) => fitDistrict(d, profile)).sort((a, b) => b.lifeScore - a.lifeScore);
+  return districtsIn(profile.place)
+    .map((d) => fitDistrict(d, profile))
+    .sort((a, b) => b.lifeScore - a.lifeScore);
 }
 
 export function matchesWant(f: DistrictFit, profile: BuyerProfile): boolean {
@@ -126,6 +128,7 @@ export function recommended(profile: BuyerProfile): DistrictFit[] {
   return rankDistricts(profile)
     .filter((f) => matchesWant(f, profile))
     .filter((f) => f.lifeScore >= 52 && f.district.scores.flood < 7 && !f.outOfReach)
+    .filter((f) => f.district.id !== "muchavista")
     .slice(0, 3);
 }
 
@@ -140,7 +143,9 @@ export function ignoredFits(profile: BuyerProfile, picks: DistrictFit[]): Distri
       if (profile.want === "quiet" && s.touristPressure >= 7) return true;
       if (!profile.hasCar && s.carNeed >= 7) return true;
       if (profile.mustHaveElevator && s.elevatorShare <= 3) return true;
-      if (profile.want === "beach" && s.sea <= 3 && f.district.price.eurPerM2 < CITY.eurPerM2) return true;
+      if (profile.want === "beach" && s.sea <= 3 && f.district.price.eurPerM2 < marketOf(profile.place).eurPerM2) {
+        return true;
+      }
       return false;
     })
     .slice(0, 6);
@@ -263,7 +268,8 @@ export function flagListing(listing: ListingInput, profile: BuyerProfile): Listi
   const rent = RENTS[district.id];
   if (rent && m2 > 0 && district.scores.flood < 6 && district.scores.touristPressure < 8) {
     const y = grossYieldPct(m2, rent.eurPerM2);
-    const cityY = grossYieldPct(CITY.eurPerM2, CITY_RENT.eurPerM2);
+    const place = placeOf(district);
+    const cityY = grossYieldPct(marketOf(place).eurPerM2, PLACE_RENT[place].eurPerM2);
     const month = typicalRentMonth(rent.eurPerM2, profile.minRooms);
     if (y >= cityY + 1.8) {
       flags.push({
@@ -283,6 +289,7 @@ export function flagListing(listing: ListingInput, profile: BuyerProfile): Listi
 }
 
 export const DEFAULT_PROFILE: BuyerProfile = {
+  place: "alicante",
   maxBudgetEur: 250000,
   minRooms: 2,
   want: "city",

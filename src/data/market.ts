@@ -1,18 +1,39 @@
-import type { CityMarket } from "../domain/types";
+import type { CityMarket, PlaceId } from "../domain/types";
 
-export const CITY: CityMarket = {
-  nameRu: "Аликанте",
-  asOf: "2026-07",
-  briefingDate: "2026-08-20",
-  eurPerM2: 2705,
-  tinsaEurPerM2: 2069,
-  yoyPct: 6.6,
-  threeMonthPct: 0.9,
-  spainEurPerM2: 2933,
-  spainYoyPct: 13.1,
-  source: "Idealista июль 2026 · Fotocasa август 2026 · Tinsa 2 кв. 2026",
-  note: "2 705 €/м² — объявления. Tinsa по оценкам банка: 2 069 €/м². Разница около 30%. Не путай желание продавца и то, что банк посчитает.",
+export const MARKETS: Record<PlaceId, CityMarket> = {
+  alicante: {
+    nameRu: "Аликанте",
+    asOf: "2026-07",
+    briefingDate: "2026-08-20",
+    eurPerM2: 2705,
+    tinsaEurPerM2: 2069,
+    yoyPct: 6.6,
+    threeMonthPct: 0.9,
+    spainEurPerM2: 2933,
+    spainYoyPct: 13.1,
+    source: "Idealista июль 2026 · Fotocasa август 2026 · Tinsa 2 кв. 2026",
+    note: "2 705 €/м² — объявления. Tinsa по оценкам банка: 2 069 €/м². Разница около 30%. Не путай желание продавца и то, что банк посчитает.",
+  },
+  campello: {
+    nameRu: "Эль-Кампельо",
+    asOf: "2026-08",
+    briefingDate: "2026-08-20",
+    eurPerM2: 3345,
+    tinsaEurPerM2: null,
+    yoyPct: 3.1,
+    threeMonthPct: 2.0,
+    spainEurPerM2: 2933,
+    spainYoyPct: 13.1,
+    source: "Fotocasa август 2026 · Idealista июль 3 208 €/м²",
+    note: "Это не район Аликанте. Свой город, трамвай L1, то же море что Сан-Хуан. Посёлок 2 199 €/м². Мучависта 4 532 — уже дороже пляжа Аликанте.",
+  },
 };
+
+export const CITY = MARKETS.alicante;
+
+export function marketOf(place: PlaceId): CityMarket {
+  return MARKETS[place];
+}
 
 export const SOURCES = [
   {
@@ -34,5 +55,13 @@ export const SOURCES = [
   {
     title: "Fotocasa: аренда Аликанте 14 €/м², август 2026",
     url: "https://www.fotocasa.es/es/indice-precio-vivienda/alquiler/alicante-alacant/todas-las-zonas",
+  },
+  {
+    title: "Fotocasa: Эль-Кампельо 3 345 €/м², август 2026",
+    url: "https://www.fotocasa.es/es/indice-precio-vivienda/el-campello/todas-las-zonas",
+  },
+  {
+    title: "Fotocasa: аренда Эль-Кампельо 13 €/м², август 2026",
+    url: "https://www.fotocasa.es/es/indice-precio-vivienda/alquiler/el-campello/todas-las-zonas",
   },
 ];

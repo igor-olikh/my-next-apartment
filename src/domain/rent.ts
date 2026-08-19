@@ -1,11 +1,11 @@
-import { CITY_RENT, RENTS } from "../data/rents";
-import { CITY } from "../data/market";
-import { DISTRICTS } from "../data/districts";
+import { PLACE_RENT, RENTS } from "../data/rents";
+import { marketOf } from "../data/market";
+import { DISTRICTS, districtsIn } from "../data/districts";
 import { formatEur, formatMonth, formatPct, grossYieldPct, typicalRentMonth, typicalSqm } from "./money";
-import type { BuyerProfile, DistrictFit, RentOpportunity } from "./types";
+import type { BuyerProfile, DistrictFit, PlaceId, RentOpportunity } from "./types";
 
-export function cityYieldPct(): number {
-  return grossYieldPct(CITY.eurPerM2, CITY_RENT.eurPerM2);
+export function cityYieldPct(place: PlaceId = "alicante"): number {
+  return grossYieldPct(marketOf(place).eurPerM2, PLACE_RENT[place].eurPerM2);
 }
 
 export function districtYield(id: string): number | null {
@@ -28,7 +28,7 @@ function isFlood(id: string): boolean {
 export function findRentOpportunities(profile: BuyerProfile, picks: DistrictFit[]): RentOpportunity[] {
   const ops: RentOpportunity[] = [];
   const picked = new Set(picks.map((p) => p.district.id));
-  const cityY = cityYieldPct();
+  const cityY = cityYieldPct(profile.place);
   const sqm = typicalSqm(profile.minRooms);
 
   const stretchOrBroke = picks.length === 0 || picks[0]?.stretch || picks[0]?.outOfReach;
@@ -52,7 +52,7 @@ export function findRentOpportunities(profile: BuyerProfile, picks: DistrictFit[
   }
 
   const heat: RentOpportunity[] = [];
-  for (const d of DISTRICTS) {
+  for (const d of districtsIn(profile.place)) {
     const rent = RENTS[d.id];
     if (!rent) continue;
     if (isFlood(d.id)) continue;
@@ -76,7 +76,7 @@ export function findRentOpportunities(profile: BuyerProfile, picks: DistrictFit[
         monthEur: month,
         sqm,
         headline: `${d.nameRu}: аренда есть, жизнь другая`,
-        why: `Грубые ${y.toFixed(1)}% при городе ~${cityY.toFixed(1)}%. Люди снимают, потому что покупать дёшево, не потому что район стал Энсанче.`,
+        why: `Грубые ${y.toFixed(1)}% при городе ~${cityY.toFixed(1)}%. Люди снимают, потому что покупать дёшево, не потому что район стал лучшим.`,
         caution: d.trap,
       });
       continue;

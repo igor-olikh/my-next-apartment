@@ -1,16 +1,26 @@
 import { useMemo, useState } from "react";
-import { CITY, SOURCES } from "../data/market";
-import { DISTRICTS } from "../data/districts";
+import { MARKETS, SOURCES, marketOf } from "../data/market";
+import { districtsIn } from "../data/districts";
 import { buildBriefing } from "../domain/briefing";
 import { cashToMoveIn, formatEur, formatM2, formatPct } from "../domain/money";
 import { DEFAULT_PROFILE, flagListing } from "../domain/score";
-import type { BuyerProfile, DistrictFit, LifeWant, ListingFlag, RentKind } from "../domain/types";
+import type { BuyerProfile, DistrictFit, LifeWant, ListingFlag, PlaceId, RentKind } from "../domain/types";
 
 const WANTS: { id: LifeWant; label: string }[] = [
   { id: "quiet", label: "тихо" },
   { id: "city", label: "город" },
   { id: "beach", label: "море" },
 ];
+
+const PLACES: { id: PlaceId; label: string }[] = [
+  { id: "alicante", label: "Аликанте" },
+  { id: "campello", label: "Эль-Кампельо" },
+];
+
+const LISTING_SEED: Record<PlaceId, string> = {
+  alicante: "benalua",
+  campello: "campello-pueblo",
+};
 
 function stamp(fit: DistrictFit): string {
   if (fit.outOfReach) return "только если поднять потолок";
@@ -39,24 +49,44 @@ export function BriefingPage() {
   const [flags, setFlags] = useState<ListingFlag[] | null>(null);
 
   const brief = useMemo(() => buildBriefing(profile), [profile]);
+  const market = marketOf(profile.place);
+  const placeDistricts = districtsIn(profile.place);
 
   function patch(p: Partial<BuyerProfile>) {
     setProfile((prev) => ({ ...prev, ...p }));
     setFlags(null);
+    if (p.place) {
+      setListing((prev) => ({ ...prev, districtId: LISTING_SEED[p.place!] }));
+    }
   }
 
   return (
     <div className="page">
       <header className="letterhead">
         <p className="kicker">Следующая квартира</p>
-        <p className="place">Аликанте · жить, не сдавать</p>
+        <p className="place">{market.nameRu} · жить, не сдавать</p>
         <p className="dates">
-          Брифинг {CITY.briefingDate} · снимок рынка {CITY.asOf}
+          Брифинг {market.briefingDate} · снимок рынка {market.asOf}
         </p>
       </header>
 
       <form className="profile" onSubmit={(e) => e.preventDefault()}>
         <p className="hint">Это не анкета. Подвинь — текст перепишется.</p>
+        <div className="row">
+          <span className="lbl">Место</span>
+          <div className="stamps">
+            {PLACES.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                className={profile.place === p.id ? "on" : ""}
+                onClick={() => patch({ place: p.id })}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+        </div>
         <label className="field">
           <span>Потолок</span>
           <input
@@ -141,19 +171,26 @@ export function BriefingPage() {
         <p className="section">Что мы знаем сейчас</p>
         <p className="nums">
           <span>
-            {formatM2(CITY.eurPerM2)}
+            {formatM2(market.eurPerM2)}
             <small>город</small>
           </span>
           <span>
-            {formatPct(CITY.yoyPct)}
+            {formatPct(market.yoyPct)}
             <small>за год</small>
           </span>
+          {market.tinsaEurPerM2 != null ? (
+            <span>
+              {formatM2(market.tinsaEurPerM2)}
+              <small>оценка банка</small>
+            </span>
+          ) : (
+            <span>
+              {formatM2(MARKETS.alicante.eurPerM2)}
+              <small>Аликанте город</small>
+            </span>
+          )}
           <span>
-            {formatM2(CITY.tinsaEurPerM2)}
-            <small>оценка банка</small>
-          </span>
-          <span>
-            {formatPct(CITY.threeMonthPct)}
+            {formatPct(market.threeMonthPct)}
             <small>за 3 месяца</small>
           </span>
         </p>
@@ -263,7 +300,7 @@ export function BriefingPage() {
               value={listing.districtId}
               onChange={(e) => setListing({ ...listing, districtId: e.target.value })}
             >
-              {DISTRICTS.map((d) => (
+              {placeDistricts.map((d) => (
                 <option key={d.id} value={d.id}>
                   {d.nameRu}
                 </option>
@@ -341,7 +378,7 @@ export function BriefingPage() {
 
       <footer>
         <p>
-          {CITY.source}. {CITY.note} Система не покупает за тебя. Нет в модели: ремонт, ориентация, реальный шум,
+          {market.source}. {market.note} Система не покупает за тебя. Нет в модели: ремонт, ориентация, реальный шум,
           долги на доме, nota simple.
         </p>
         <ul>
