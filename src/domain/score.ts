@@ -1,6 +1,5 @@
-import { marketOf } from "../data/market";
-import { PLACE_RENT, RENTS } from "../data/rents";
-import { districtById, districtsIn, placeOf } from "../data/districts";
+import { placeOf } from "../data/districts";
+import { STATIC_CATALOG, type Catalog } from "../runtime/catalog";
 import { cashToMoveIn, formatMonth, grossYieldPct, typicalAsk, typicalRentMonth, typicalSqm } from "./money";
 import type {
   BuyerProfile,
@@ -111,8 +110,9 @@ export function fitDistrict(district: District, profile: BuyerProfile): District
   };
 }
 
-export function rankDistricts(profile: BuyerProfile): DistrictFit[] {
-  return districtsIn(profile.place)
+export function rankDistricts(profile: BuyerProfile, cat: Catalog = STATIC_CATALOG): DistrictFit[] {
+  return cat
+    .districtsIn(profile.place)
     .map((d) => fitDistrict(d, profile))
     .sort((a, b) => b.lifeScore - a.lifeScore);
 }
@@ -124,17 +124,17 @@ export function matchesWant(f: DistrictFit, profile: BuyerProfile): boolean {
   return s.quiet >= 5 && s.touristPressure <= 6;
 }
 
-export function recommended(profile: BuyerProfile): DistrictFit[] {
-  return rankDistricts(profile)
+export function recommended(profile: BuyerProfile, cat: Catalog = STATIC_CATALOG): DistrictFit[] {
+  return rankDistricts(profile, cat)
     .filter((f) => matchesWant(f, profile))
     .filter((f) => f.lifeScore >= 52 && f.district.scores.flood < 7 && !f.outOfReach)
     .filter((f) => f.district.id !== "muchavista")
     .slice(0, 3);
 }
 
-export function ignoredFits(profile: BuyerProfile, picks: DistrictFit[]): DistrictFit[] {
+export function ignoredFits(profile: BuyerProfile, picks: DistrictFit[], cat: Catalog = STATIC_CATALOG): DistrictFit[] {
   const picked = new Set(picks.map((p) => p.district.id));
-  return rankDistricts(profile)
+  return rankDistricts(profile, cat)
     .filter((f) => !picked.has(f.district.id))
     .filter((f) => {
       const s = f.district.scores;
@@ -143,7 +143,7 @@ export function ignoredFits(profile: BuyerProfile, picks: DistrictFit[]): Distri
       if (profile.want === "quiet" && s.touristPressure >= 7) return true;
       if (!profile.hasCar && s.carNeed >= 7) return true;
       if (profile.mustHaveElevator && s.elevatorShare <= 3) return true;
-      if (profile.want === "beach" && s.sea <= 3 && f.district.price.eurPerM2 < marketOf(profile.place).eurPerM2) {
+      if (profile.want === "beach" && s.sea <= 3 && f.district.price.eurPerM2 < cat.marketOf(profile.place).eurPerM2) {
         return true;
       }
       return false;
@@ -151,8 +151,8 @@ export function ignoredFits(profile: BuyerProfile, picks: DistrictFit[]): Distri
     .slice(0, 6);
 }
 
-export function flagListing(listing: ListingInput, profile: BuyerProfile): ListingFlag[] {
-  const district = districtById(listing.districtId);
+export function flagListing(listing: ListingInput, profile: BuyerProfile, cat: Catalog = STATIC_CATALOG): ListingFlag[] {
+  const district = cat.districtById(listing.districtId);
   const flags: ListingFlag[] = [];
   if (!district) {
     flags.push({ code: "no-district", severity: "bad", text: "Район неизвестен. Без района цена ничего не значит." });
@@ -265,11 +265,11 @@ export function flagListing(listing: ListingInput, profile: BuyerProfile): Listi
       text: `${district.nameRu} под твои условия живой. Дальше дом, не район.`,
     });
   }
-  const rent = RENTS[district.id];
+  const rent = cat.rentOf(district.id);
   if (rent && m2 > 0 && district.scores.flood < 6 && district.scores.touristPressure < 8) {
     const y = grossYieldPct(m2, rent.eurPerM2);
     const place = placeOf(district);
-    const cityY = grossYieldPct(marketOf(place).eurPerM2, PLACE_RENT[place].eurPerM2);
+    const cityY = grossYieldPct(cat.marketOf(place).eurPerM2, cat.placeRent(place).eurPerM2);
     const month = typicalRentMonth(rent.eurPerM2, profile.minRooms);
     if (y >= cityY + 1.8) {
       flags.push({

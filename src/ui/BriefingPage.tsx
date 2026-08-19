@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
-import { MARKETS, SOURCES, marketOf } from "../data/market";
-import { districtsIn } from "../data/districts";
+import { useEffect, useMemo, useState } from "react";
+import { MARKETS, SOURCES } from "../data/market";
 import { buildBriefing } from "../domain/briefing";
 import { cashToMoveIn, formatEur, formatM2, formatPct } from "../domain/money";
+import type { CollectStatus, MarketSnapshot } from "../domain/snapshot";
 import { DEFAULT_PROFILE, flagListing } from "../domain/score";
+import { STATIC_CATALOG, createCatalog } from "../runtime/catalog";
 import type { BuyerProfile, DistrictFit, LifeWant, ListingFlag, PlaceId, RentKind } from "../domain/types";
 
 const WANTS: { id: LifeWant; label: string }[] = [
@@ -47,10 +48,26 @@ export function BriefingPage() {
     daysOnMarket: 40,
   });
   const [flags, setFlags] = useState<ListingFlag[] | null>(null);
+  const [catalog, setCatalog] = useState(STATIC_CATALOG);
+  const [status, setStatus] = useState<CollectStatus | null>(null);
 
-  const brief = useMemo(() => buildBriefing(profile), [profile]);
-  const market = marketOf(profile.place);
-  const placeDistricts = districtsIn(profile.place);
+  useEffect(() => {
+    void Promise.all([
+      fetch("/api/snapshot").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/status").then((r) => (r.ok ? r.json() : null)),
+    ])
+      .then(([snap, st]: [MarketSnapshot | null, CollectStatus | null]) => {
+        if (snap?.places) setCatalog(createCatalog(snap));
+        if (st) setStatus(st);
+      })
+      .catch(() => {
+        /* офлайн: статический каталог */
+      });
+  }, []);
+
+  const brief = useMemo(() => buildBriefing(profile, catalog), [profile, catalog]);
+  const market = catalog.marketOf(profile.place);
+  const placeDistricts = catalog.districtsIn(profile.place);
 
   function patch(p: Partial<BuyerProfile>) {
     setProfile((prev) => ({ ...prev, ...p }));
@@ -67,6 +84,9 @@ export function BriefingPage() {
         <p className="place">{market.nameRu} · жить, не сдавать</p>
         <p className="dates">
           Брифинг {market.briefingDate} · снимок рынка {market.asOf}
+          {status?.lastCollectAt
+            ? ` · сбор ${status.lastOk ? "сам" : "ошибка"} ${status.lastCollectAt.slice(0, 10)}`
+            : ""}
         </p>
       </header>
 
@@ -290,6 +310,7 @@ export function BriefingPage() {
                   hasAc: null,
                 },
                 profile,
+                catalog,
               ),
             );
           }}
@@ -378,8 +399,9 @@ export function BriefingPage() {
 
       <footer>
         <p>
-          {market.source}. {market.note} Система не покупает за тебя. Нет в модели: ремонт, ориентация, реальный шум,
-          долги на доме, nota simple.
+          {market.source}. {market.note}
+          {status?.lastError ? ` Сбор: ${status.lastError}.` : " Сбор цен идёт сам, раз в неделю."} Система не
+          покупает за тебя. Нет в модели: ремонт, ориентация, реальный шум, долги на доме, nota simple.
         </p>
         <ul>
           {SOURCES.map((s) => (

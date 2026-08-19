@@ -1,4 +1,4 @@
-import { marketOf } from "../data/market";
+import { STATIC_CATALOG, type Catalog } from "../runtime/catalog";
 import { formatEur, formatM2, formatPct } from "./money";
 import { findRentOpportunities } from "./rent";
 import { ignoredFits, matchesWant, rankDistricts, recommended } from "./score";
@@ -102,8 +102,8 @@ function pathVerdict(profile: BuyerProfile, picks: DistrictFit[]): string {
   return `Тихо за ${formatEur(profile.maxBudgetEur)} — ${head}${rest.length ? ", иначе " + rest.join(" или ") : ""}. Центр ночью и Сан-Хуан летом снимаем.`;
 }
 
-function marketLines(profile: BuyerProfile, ranked: DistrictFit[]): string[] {
-  const m = marketOf(profile.place);
+function marketLines(profile: BuyerProfile, ranked: DistrictFit[], cat: Catalog): string[] {
+  const m = cat.marketOf(profile.place);
   const lines =
     profile.place === "campello"
       ? [
@@ -124,9 +124,9 @@ function marketLines(profile: BuyerProfile, ranked: DistrictFit[]): string[] {
   return lines.slice(0, 2);
 }
 
-function ignoreLines(profile: BuyerProfile, picks: DistrictFit[], skipIds: Set<string>): string[] {
+function ignoreLines(profile: BuyerProfile, picks: DistrictFit[], skipIds: Set<string>, cat: Catalog): string[] {
   const lines: string[] = [];
-  const ignored = ignoredFits(profile, picks);
+  const ignored = ignoredFits(profile, picks, cat);
 
   for (const f of ignored) {
     const d = f.district;
@@ -184,9 +184,9 @@ function actions(profile: BuyerProfile, picks: DistrictFit[]): string[] {
   return list.slice(0, 3);
 }
 
-export function buildBriefing(profile: BuyerProfile): Briefing {
-  const ranked = rankDistricts(profile);
-  const picks = recommended(profile);
+export function buildBriefing(profile: BuyerProfile, cat: Catalog = STATIC_CATALOG): Briefing {
+  const ranked = rankDistricts(profile, cat);
+  const picks = recommended(profile, cat);
   const brokeLine = broke(profile, ranked);
   const conflictLine = conflict(profile, picks);
 
@@ -201,19 +201,19 @@ export function buildBriefing(profile: BuyerProfile): Briefing {
   }
 
   const inBudget = ranked.filter((f) => f.affordable && matchesWant(f, profile)).length;
-  const m = marketOf(profile.place);
+  const m = cat.marketOf(profile.place);
   const evidence = `срез: ${roomsRu(profile.minRooms)}, ${WANT_RU[profile.want]}, ${profile.hasCar ? "машина" : "без машины"} · медиана ${m.nameRu.toLowerCase()} ${formatM2(m.eurPerM2)} · ${inBudget} живых районов в бюджете`;
-  const rentOps = findRentOpportunities(profile, picks);
+  const rentOps = findRentOpportunities(profile, picks, cat);
   const rentKeep = new Set(rentOps.filter((o) => o.kind !== "yield_trap").map((o) => o.districtId));
 
   return {
     kind,
     verdict,
     evidence,
-    marketLines: marketLines(profile, ranked),
+    marketLines: marketLines(profile, ranked, cat),
     recommended: picks,
     rentOps,
-    ignored: ignoreLines(profile, picks, rentKeep),
+    ignored: ignoreLines(profile, picks, rentKeep, cat),
     actions: actions(profile, picks),
     traps: picks.map((p) => p.district.trap),
   };

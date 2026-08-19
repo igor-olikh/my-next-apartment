@@ -4,3 +4,6 @@ dist
 *.local
 .vite
 coverage
+data/snapshots/*
+!data/snapshots/.gitkeep
+!data/snapshots/latest.json
