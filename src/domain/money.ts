@@ -29,3 +29,16 @@ export function formatPct(n: number): string {
   const sign = n > 0 ? "+" : "";
   return `${sign}${n.toLocaleString("ru-RU", { maximumFractionDigits: 1 })}%`;
 }
+
+export function formatMonth(n: number): string {
+  return new Intl.NumberFormat("ru-RU").format(Math.round(n)) + " €/мес";
+}
+
+export function grossYieldPct(buyEurPerM2: number, rentEurPerM2: number): number {
+  if (buyEurPerM2 <= 0) return 0;
+  return (rentEurPerM2 * 12 * 100) / buyEurPerM2;
+}
+
+export function typicalRentMonth(rentEurPerM2: number, minRooms: number): number {
+  return Math.round(rentEurPerM2 * typicalSqm(minRooms));
+}

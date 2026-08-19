@@ -31,4 +31,8 @@ export const SOURCES = [
     title: "ITP 9% в Валенсийском сообществе с 1 июня 2026",
     url: "https://www.garrigues.com/es_ES/noticia/comunidad-valenciana-aprueba-medidas-tributarias-efectos-2025-2026-2027",
   },
+  {
+    title: "Fotocasa: аренда Аликанте 14 €/м², август 2026",
+    url: "https://www.fotocasa.es/es/indice-precio-vivienda/alquiler/alicante-alacant/todas-las-zonas",
+  },
 ];

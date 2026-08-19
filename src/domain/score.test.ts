@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildBriefing } from "./briefing";
 import { cashToMoveIn } from "./money";
+import { findRentOpportunities } from "./rent";
 import { DEFAULT_PROFILE, flagListing, recommended } from "./score";
 import type { BuyerProfile } from "./types";
 
@@ -93,5 +94,35 @@ describe("owner-occupier scoring", () => {
     const brief = buildBriefing(broke);
     expect(brief.kind === "broke" || brief.kind === "conflict").toBe(true);
     expect(brief.verdict.length).toBeGreaterThan(20);
+  });
+
+  it("flags a living rental path when the right district is a stretch to buy", () => {
+    const picks = recommended(city);
+    const ops = findRentOpportunities(city, picks);
+    expect(ops.some((o) => o.kind === "rent_instead")).toBe(true);
+    expect(ops.some((o) => o.kind === "people_pay" && o.districtId === "carolinas")).toBe(true);
+    expect(ops.every((o) => o.districtId !== "san-gabriel")).toBe(true);
+    expect(ops.every((o) => o.districtId !== "playa-san-juan")).toBe(true);
+    const brief = buildBriefing(city);
+    expect(brief.ignored.some((line) => line.startsWith("Каролинас"))).toBe(false);
+  });
+
+  it("cheap listing in a high-rent street gets a rent heat flag", () => {
+    const flags = flagListing(
+      {
+        districtId: "carolinas",
+        priceEur: 120000,
+        sqm: 80,
+        rooms: 2,
+        floor: 2,
+        totalFloors: 5,
+        elevator: true,
+        daysOnMarket: 20,
+        priceCuts: 0,
+        hasAc: true,
+      },
+      city,
+    );
+    expect(flags.some((f) => f.code === "rent-heat" && f.severity === "good")).toBe(true);
   });
 });

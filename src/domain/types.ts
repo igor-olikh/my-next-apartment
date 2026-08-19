@@ -31,6 +31,28 @@ export interface DistrictPrice {
   quality: "reported" | "estimated";
 }
 
+export interface DistrictRent {
+  eurPerM2: number;
+  asOf: string;
+  yoyPct: number | null;
+  source: string;
+  quality: "reported" | "estimated";
+}
+
+export type RentKind = "rent_instead" | "people_pay" | "yield_trap";
+
+export interface RentOpportunity {
+  districtId: string;
+  nameRu: string;
+  kind: RentKind;
+  yieldPct: number;
+  monthEur: number;
+  sqm: number;
+  headline: string;
+  why: string;
+  caution: string;
+}
+
 export interface District {
   id: string;
   nameRu: string;
@@ -98,6 +120,7 @@ export interface Briefing {
   evidence: string;
   marketLines: string[];
   recommended: DistrictFit[];
+  rentOps: RentOpportunity[];
   ignored: string[];
   actions: string[];
   traps: string[];

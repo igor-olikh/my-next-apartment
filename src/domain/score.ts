@@ -1,6 +1,7 @@
 import { CITY } from "../data/market";
+import { CITY_RENT, RENTS } from "../data/rents";
 import { DISTRICTS, districtById } from "../data/districts";
-import { cashToMoveIn, typicalAsk, typicalSqm } from "./money";
+import { cashToMoveIn, formatMonth, grossYieldPct, typicalAsk, typicalRentMonth, typicalSqm } from "./money";
 import type {
   BuyerProfile,
   District,
@@ -258,6 +259,25 @@ export function flagListing(listing: ListingInput, profile: BuyerProfile): Listi
       severity: "good",
       text: `${district.nameRu} под твои условия живой. Дальше дом, не район.`,
     });
+  }
+  const rent = RENTS[district.id];
+  if (rent && m2 > 0 && district.scores.flood < 6 && district.scores.touristPressure < 8) {
+    const y = grossYieldPct(m2, rent.eurPerM2);
+    const cityY = grossYieldPct(CITY.eurPerM2, CITY_RENT.eurPerM2);
+    const month = typicalRentMonth(rent.eurPerM2, profile.minRooms);
+    if (y >= cityY + 1.8) {
+      flags.push({
+        code: "rent-heat",
+        severity: "good",
+        text: `По этой цене аренда в районе живая (~${y.toFixed(1)}% грубых, город ~${cityY.toFixed(1)}%). Не Airbnb. Спроси, кто снимает на улице. Ориентир аренды твоих метров: ${formatMonth(month)}.`,
+      });
+    } else if (rent.yoyPct != null && rent.yoyPct >= 12 && fit.lifeScore < 62) {
+      flags.push({
+        code: "rent-demand",
+        severity: "good",
+        text: `Район не топ по жизни, но аренда за год ${rent.yoyPct > 0 ? "+" : ""}${rent.yoyPct}%. Люди снимают. Если дом нормальный — не сбрасывай.`,
+      });
+    }
   }
   return flags;
 }

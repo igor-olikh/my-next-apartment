@@ -4,7 +4,7 @@ import { DISTRICTS } from "../data/districts";
 import { buildBriefing } from "../domain/briefing";
 import { cashToMoveIn, formatEur, formatM2, formatPct } from "../domain/money";
 import { DEFAULT_PROFILE, flagListing } from "../domain/score";
-import type { BuyerProfile, DistrictFit, LifeWant, ListingFlag } from "../domain/types";
+import type { BuyerProfile, DistrictFit, LifeWant, ListingFlag, RentKind } from "../domain/types";
 
 const WANTS: { id: LifeWant; label: string }[] = [
   { id: "quiet", label: "тихо" },
@@ -17,6 +17,12 @@ function stamp(fit: DistrictFit): string {
   if (fit.stretch) return "впритык";
   if (fit.lifeScore >= 68) return "тебе да";
   return "компромисс";
+}
+
+function rentStamp(kind: RentKind): string {
+  if (kind === "rent_instead") return "снять";
+  if (kind === "people_pay") return "люди снимают";
+  return "осторожно";
 }
 
 export function BriefingPage() {
@@ -188,6 +194,24 @@ export function BriefingPage() {
         )}
         <p className="note">Остальные районы не забыты. Они ниже, в отказе.</p>
       </section>
+
+      {brief.rentOps.length > 0 && (
+        <section>
+          <p className="section">Аренда, которую нельзя пропустить</p>
+          <p className="body">
+            Не сдача туристам. Если люди здесь живут за свои деньги — район работает. Иногда снять умнее, чем купить
+            край.
+          </p>
+          {brief.rentOps.map((op) => (
+            <article key={op.kind + op.districtId} className="district">
+              <p className="ord">{rentStamp(op.kind)}</p>
+              <h2>{op.headline}</h2>
+              <p className="body">{op.why}</p>
+              <p className="trap">{op.caution}</p>
+            </article>
+          ))}
+        </section>
+      )}
 
       <section>
         <p className="section">Что игнорировать</p>

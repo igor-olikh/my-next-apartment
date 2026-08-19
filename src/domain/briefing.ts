@@ -1,5 +1,6 @@
 import { CITY } from "../data/market";
 import { formatEur, formatM2, formatPct } from "./money";
+import { findRentOpportunities } from "./rent";
 import { ignoredFits, matchesWant, rankDistricts, recommended } from "./score";
 import type { Briefing, BuyerProfile, DistrictFit, VerdictKind } from "./types";
 
@@ -105,12 +106,13 @@ function marketLines(profile: BuyerProfile, ranked: DistrictFit[]): string[] {
   return lines.slice(0, 2);
 }
 
-function ignoreLines(profile: BuyerProfile, picks: DistrictFit[]): string[] {
+function ignoreLines(profile: BuyerProfile, picks: DistrictFit[], skipIds: Set<string>): string[] {
   const lines: string[] = [];
   const ignored = ignoredFits(profile, picks);
 
   for (const f of ignored) {
     const d = f.district;
+    if (skipIds.has(d.id)) continue;
     let why = d.trap;
     if (profile.want === "beach" && d.scores.sea <= 4) why = "Это не море. Не плати за слово «Аликанте».";
     if (profile.want === "city" && d.scores.walkability <= 5 && d.scores.carNeed >= 7) {
@@ -132,7 +134,7 @@ function ignoreLines(profile: BuyerProfile, picks: DistrictFit[]): string[] {
   if (profile.mustHaveElevator) {
     lines.push("Ático без лифта и bajo на шумной улице — сразу закрывать.");
   }
-  lines.push("Доходность, лицензия turística, «инвест + жить» — не этот поиск.");
+  lines.push("Лицензия turística и «инвест + жить» — не этот поиск. Живая аренда жильцов — сигнал, что район работает.");
 
   return lines.slice(0, 7);
 }
@@ -174,6 +176,8 @@ export function buildBriefing(profile: BuyerProfile): Briefing {
 
   const inBudget = ranked.filter((f) => f.affordable && matchesWant(f, profile)).length;
   const evidence = `срез: ${roomsRu(profile.minRooms)}, ${WANT_RU[profile.want]}, ${profile.hasCar ? "машина" : "без машины"} · медиана города ${formatM2(CITY.eurPerM2)} · ${inBudget} живых районов в бюджете`;
+  const rentOps = findRentOpportunities(profile, picks);
+  const rentKeep = new Set(rentOps.filter((o) => o.kind !== "yield_trap").map((o) => o.districtId));
 
   return {
     kind,
@@ -181,7 +185,8 @@ export function buildBriefing(profile: BuyerProfile): Briefing {
     evidence,
     marketLines: marketLines(profile, ranked),
     recommended: picks,
-    ignored: ignoreLines(profile, picks),
+    rentOps,
+    ignored: ignoreLines(profile, picks, rentKeep),
     actions: actions(profile, picks),
     traps: picks.map((p) => p.district.trap),
   };
