@@ -57,6 +57,12 @@ select {
   color: var(--muted);
 }
 
+.give {
+  margin: 0.7rem 0 0;
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
 .place {
   margin: 0.15rem 0 0;
 }

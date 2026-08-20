@@ -15,7 +15,7 @@ const MAP: Record<string, { place: PlaceId; ids: string[] }> = {
   "playa muchavista": { place: "campello", ids: ["muchavista"] },
   "campello pueblo": { place: "campello", ids: ["campello-pueblo"] },
   "pueblo acantilado lanuza": { place: "campello", ids: ["acantilado-lanuza"] },
-  centro: { place: "alicante", ids: ["centro", "ensanche", "mercado"] },
+  centro: { place: "alicante", ids: ["centro"] },
   "benalua babel": { place: "alicante", ids: ["benalua"] },
   "pla carolinas": { place: "alicante", ids: ["pla-bon-repos", "carolinas"] },
   "san blas": { place: "alicante", ids: ["san-blas"] },

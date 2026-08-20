@@ -105,9 +105,9 @@ export function mergeSnapshot(prev: MarketSnapshot | null, next: MarketSnapshot)
   for (const place of ["alicante", "campello"] as PlaceId[]) {
     const incoming = next.places[place];
     if (!incoming) continue;
-    const oldMap = new Map((places[place]?.districts ?? []).map((d) => [d.id, d]));
-    for (const d of incoming.districts) oldMap.set(d.id, d);
-    places[place] = { ...incoming, districts: [...oldMap.values()] };
+    const seedMap = new Map(seedSnapshot().places[place].districts.map((d) => [d.id, d]));
+    for (const d of incoming.districts) seedMap.set(d.id, d);
+    places[place] = { ...incoming, districts: [...seedMap.values()] };
   }
   return {
     ...prev,

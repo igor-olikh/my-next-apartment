@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { MARKETS, SOURCES } from "../data/market";
+import { SOURCES } from "../data/market";
 import { buildBriefing } from "../domain/briefing";
 import { cashToMoveIn, formatEur, formatM2, formatPct } from "../domain/money";
 import type { CollectStatus, MarketSnapshot } from "../domain/snapshot";
@@ -24,16 +24,16 @@ const LISTING_SEED: Record<PlaceId, string> = {
 };
 
 function stamp(fit: DistrictFit): string {
-  if (fit.outOfReach) return "только если поднять потолок";
-  if (fit.stretch) return "впритык";
-  if (fit.lifeScore >= 68) return "тебе да";
-  return "компромисс";
+  if (fit.outOfReach) return "в эти деньги не купить";
+  if (fit.stretch) return "дорого, но это та жизнь";
+  if (fit.lifeScore >= 68) return "подходит";
+  return "можно, с оговоркой";
 }
 
 function rentStamp(kind: RentKind): string {
-  if (kind === "rent_instead") return "снять";
-  if (kind === "people_pay") return "люди снимают";
-  return "осторожно";
+  if (kind === "rent_instead") return "лучше снять";
+  if (kind === "people_pay") return "здесь живут в аренде";
+  return "дешево не значит хорошо";
 }
 
 export function BriefingPage() {
@@ -61,7 +61,7 @@ export function BriefingPage() {
         if (st) setStatus(st);
       })
       .catch(() => {
-        /* офлайн: статический каталог */
+        /* офлайн */
       });
   }, []);
 
@@ -81,19 +81,20 @@ export function BriefingPage() {
     <div className="page">
       <header className="letterhead">
         <p className="kicker">Следующая квартира</p>
-        <p className="place">{market.nameRu} · жить, не сдавать</p>
+        <p className="give">
+          Это ответ на вопрос: <strong>куда смотреть жильё, чтобы жить самому</strong>, за твои деньги. Не каталог
+          объявлений. Не совет «купи вот это». Три района, цена, чего избегать, что сделать на этой неделе.
+        </p>
         <p className="dates">
-          Брифинг {market.briefingDate} · снимок рынка {market.asOf}
-          {status?.lastCollectAt
-            ? ` · сбор ${status.lastOk ? "сам" : "ошибка"} ${status.lastCollectAt.slice(0, 10)}`
-            : ""}
+          {market.nameRu}. Цены из объявлений, {market.asOf}. Сами обновляются.
+          {status?.lastOk === false && status.lastError ? " Последний заход за ценами не вышел — на экране прошлый снимок." : ""}
         </p>
       </header>
 
       <form className="profile" onSubmit={(e) => e.preventDefault()}>
-        <p className="hint">Это не анкета. Подвинь — текст перепишется.</p>
+        <p className="hint">Поставь как для себя. Текст ниже — ответ под эти условия.</p>
         <div className="row">
-          <span className="lbl">Место</span>
+          <span className="lbl">Город</span>
           <div className="stamps">
             {PLACES.map((p) => (
               <button
@@ -108,7 +109,7 @@ export function BriefingPage() {
           </div>
         </div>
         <label className="field">
-          <span>Потолок</span>
+          <span>Бюджет</span>
           <input
             type="range"
             min={150000}
@@ -120,7 +121,7 @@ export function BriefingPage() {
           <b>{formatEur(profile.maxBudgetEur)}</b>
         </label>
         <div className="row">
-          <span className="lbl">Комнаты</span>
+          <span className="lbl">Спальни</span>
           <div className="stamps">
             {[1, 2, 3, 4].map((n) => (
               <button
@@ -135,7 +136,7 @@ export function BriefingPage() {
           </div>
         </div>
         <div className="row">
-          <span className="lbl">Жизнь</span>
+          <span className="lbl">Хочу</span>
           <div className="stamps">
             {WANTS.map((w) => (
               <button
@@ -156,7 +157,7 @@ export function BriefingPage() {
               нет
             </button>
             <button type="button" className={profile.hasCar ? "on" : ""} onClick={() => patch({ hasCar: true })}>
-              да
+              есть
             </button>
           </div>
         </div>
@@ -168,51 +169,42 @@ export function BriefingPage() {
               className={profile.mustHaveElevator ? "on" : ""}
               onClick={() => patch({ mustHaveElevator: true })}
             >
-              обязателен
+              нужен
             </button>
             <button
               type="button"
               className={!profile.mustHaveElevator ? "on" : ""}
               onClick={() => patch({ mustHaveElevator: false })}
             >
-              не фильтр
+              не важен
             </button>
           </div>
         </div>
       </form>
 
       <section className="verdict">
-        <p className="section">Вердикт</p>
+        <p className="section">Куда тебе</p>
         <h1>{brief.verdict}</h1>
         <p className="evidence">{brief.evidence}</p>
       </section>
 
       <section>
-        <p className="section">Что мы знаем сейчас</p>
+        <p className="section">Что происходит с ценами</p>
         <p className="nums">
           <span>
             {formatM2(market.eurPerM2)}
-            <small>город</small>
+            <small>просят в объявлениях</small>
           </span>
           <span>
             {formatPct(market.yoyPct)}
             <small>за год</small>
           </span>
-          {market.tinsaEurPerM2 != null ? (
+          {market.tinsaEurPerM2 != null && (
             <span>
               {formatM2(market.tinsaEurPerM2)}
-              <small>оценка банка</small>
-            </span>
-          ) : (
-            <span>
-              {formatM2(MARKETS.alicante.eurPerM2)}
-              <small>Аликанте город</small>
+              <small>примерно думает банк</small>
             </span>
           )}
-          <span>
-            {formatPct(market.threeMonthPct)}
-            <small>за 3 месяца</small>
-          </span>
         </p>
         {brief.marketLines.map((line) => (
           <p key={line} className="body">
@@ -222,47 +214,50 @@ export function BriefingPage() {
       </section>
 
       <section>
-        <p className="section">Где жить</p>
+        <p className="section">Смотри эти районы</p>
         {brief.recommended.length === 0 ? (
-          <p className="body">Тройки нет. Сначала отпусти одно условие.</p>
+          <p className="body">Под эти условия покупать почти нечего. Подвинь бюджет, спальни или «хочу».</p>
         ) : (
           brief.recommended.map((fit, i) => (
             <article key={fit.district.id} className="district">
               <p className="ord">
-                {i + 1} · {stamp(fit)}
+                {i + 1}. {stamp(fit)}
               </p>
               <h2>{fit.district.nameRu}</h2>
-              <p className="es">{fit.district.nameEs}</p>
               <p className="body">{fit.district.character}</p>
-              <ul>
-                {fit.reasons.map((r) => (
-                  <li key={r}>{r}</li>
-                ))}
-              </ul>
               <p className="price">
-                Твоя квартира, ориентир: {formatEur(fit.typicalAskEur)} за ~{fit.typicalSqm} м².
-                С налогом и оформлением ≈ {formatEur(fit.cashToMoveIn)}.
-                {fit.district.price.quality === "estimated" ? " Цена района — оценка." : ""}
+                Похожая квартира в этом районе: около {formatEur(fit.typicalAskEur)}. Чтобы заехать, сверху налог —
+                выйдет примерно {formatEur(fit.cashToMoveIn)}.
+                {fit.stretch ? " Это больше твоего бюджета: либо торг, либо меньше метров, либо другой район ниже." : ""}
+                {fit.outOfReach ? " В твои деньги это не покупается." : ""}
               </p>
-              <p className="trap">Ловушка: {fit.district.trap}</p>
-              <p className="rule">Без чего не смотреть: {fit.district.viewRule}</p>
+              <p className="trap">Осторожно: {fit.district.trap}</p>
+              <p className="rule">Если пойдёшь смотреть: {fit.district.viewRule}</p>
             </article>
           ))
         )}
-        <p className="note">Остальные районы не забыты. Они ниже, в отказе.</p>
+      </section>
+
+      <section>
+        <p className="section">Сделай на этой неделе</p>
+        <ol className="do">
+          {brief.actions.map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+        </ol>
       </section>
 
       {brief.rentOps.length > 0 && (
         <section>
-          <p className="section">Аренда, которую нельзя пропустить</p>
+          <p className="section">Имеет смысл снять</p>
           <p className="body">
-            Не сдача туристам. Если люди здесь живут за свои деньги — район работает. Иногда снять умнее, чем купить
-            край.
+            Ты ищешь жильё для себя. Иногда купить нужный район не влезает, а снять там — нормально. Иногда район не
+            красивый, но люди там живут и платят за аренду: значит место живое.
           </p>
           {brief.rentOps.map((op) => (
             <article key={op.kind + op.districtId} className="district">
               <p className="ord">{rentStamp(op.kind)}</p>
-              <h2>{op.headline}</h2>
+              <h2>{op.nameRu}</h2>
               <p className="body">{op.why}</p>
               <p className="trap">{op.caution}</p>
             </article>
@@ -271,7 +266,7 @@ export function BriefingPage() {
       )}
 
       <section>
-        <p className="section">Что игнорировать</p>
+        <p className="section">Сюда не ходи</p>
         <ul className="ignore">
           {brief.ignored.map((line) => (
             <li key={line}>{line}</li>
@@ -279,18 +274,9 @@ export function BriefingPage() {
         </ul>
       </section>
 
-      <section>
-        <p className="section">Что делать</p>
-        <ol className="do">
-          {brief.actions.map((line) => (
-            <li key={line}>{line}</li>
-          ))}
-        </ol>
-      </section>
-
       <section className="check">
-        <p className="section">Пришло объявление</p>
-        <p className="body">Не каталог. Одна карточка с сайта — суд за 10 секунд.</p>
+        <p className="section">Увидел объявление</p>
+        <p className="body">Впиши цифры с карточки. Скажет: дорого, странно дёшево, или лифт — нет.</p>
         <form
           className="listing"
           onSubmit={(e) => {
@@ -329,7 +315,7 @@ export function BriefingPage() {
             </select>
           </label>
           <label>
-            Цена €
+            Цена в объявлении, €
             <input
               type="number"
               value={listing.priceEur}
@@ -337,7 +323,7 @@ export function BriefingPage() {
             />
           </label>
           <label>
-            м²
+            Метры
             <input
               type="number"
               value={listing.sqm}
@@ -345,7 +331,7 @@ export function BriefingPage() {
             />
           </label>
           <label>
-            Комнаты
+            Спальни
             <input
               type="number"
               value={listing.rooms}
@@ -361,7 +347,7 @@ export function BriefingPage() {
             />
           </label>
           <label>
-            Дней висит
+            Сколько дней висит
             <input
               type="number"
               value={listing.daysOnMarket}
@@ -376,12 +362,12 @@ export function BriefingPage() {
             />
             Есть лифт
           </label>
-          <button type="submit">Суд</button>
+          <button type="submit">Проверить</button>
         </form>
         {flags && (
           <ul className="flags">
             {flags.length === 0 ? (
-              <li>Ничего кричащего. Всё равно: comunidad, ориентация, соседи-туристы.</li>
+              <li>В цифрах ничего странного. Всё равно сходи и послушай улицу вечером.</li>
             ) : (
               flags.map((f) => (
                 <li key={f.code} className={f.severity}>
@@ -392,19 +378,19 @@ export function BriefingPage() {
           </ul>
         )}
         <p className="note">
-          Квартира за {formatEur(listing.priceEur)} ≈ {formatEur(cashToMoveIn(listing.priceEur))} чтобы въехать (ITP
-          9% + оформление).
+          К цене в объявлении сверху налог штата, около 11%. За {formatEur(listing.priceEur)} въехать выйдет примерно{" "}
+          {formatEur(cashToMoveIn(listing.priceEur))}.
         </p>
       </section>
 
       <footer>
         <p>
-          {market.source}. {market.note}
-          {status?.lastError ? ` Сбор: ${status.lastError}.` : " Сбор цен идёт сам, раз в неделю."} Система не
-          покупает за тебя. Нет в модели: ремонт, ориентация, реальный шум, долги на доме, nota simple.
+          Цифры берём из открытых индексов объявлений. Раз в неделю сами. Это не то, что в итоге заплатят при сделке.
+          Система не покупает за тебя.
         </p>
+        {status?.lastError ? <p>Заход за ценами не вышел: {status.lastError}. На экране прошлые цифры.</p> : null}
         <ul>
-          {SOURCES.map((s) => (
+          {SOURCES.slice(0, 4).map((s) => (
             <li key={s.url}>
               <a href={s.url} target="_blank" rel="noreferrer">
                 {s.title}

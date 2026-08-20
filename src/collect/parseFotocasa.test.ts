@@ -26,7 +26,7 @@ describe("fotocasa index parser", () => {
     const p = parseFotocasaIndex(html);
     expect(p.name).toMatch(/Alicante/i);
     expect(p.saleEurPerM2).toBeGreaterThan(2500);
-    expect(mapFotocasaDistrict("Centro")?.ids).toEqual(["centro", "ensanche", "mercado"]);
+    expect(mapFotocasaDistrict("Centro")?.ids).toEqual(["centro"]);
     expect(mapFotocasaDistrict("Benalúa - Babel")?.ids).toEqual(["benalua"]);
   });
 });

@@ -1,5 +1,5 @@
 {
-  "takenAt": "2026-08-19T22:23:52.258Z",
+  "takenAt": "2026-08-20T05:18:33.803Z",
   "source": "fotocasa",
   "places": {
     "alicante": {
@@ -13,31 +13,31 @@
       "districts": [
         {
           "id": "ensanche",
-          "sourceName": "Centro",
-          "saleEurPerM2": 3709.95,
-          "rentEurPerM2": 13.55,
-          "yoyPct": 14.61,
-          "rentYoyPct": 2.19,
+          "sourceName": "Ensanche-Diputación",
+          "saleEurPerM2": 3664,
+          "rentEurPerM2": 14,
+          "yoyPct": 12.8,
+          "rentYoyPct": 2.2,
           "asOf": "2026-08",
-          "source": "Fotocasa, Centro, 2026-08"
+          "source": "Fotocasa, Ensanche-Diputación, август 2026"
         },
         {
           "id": "mercado",
-          "sourceName": "Centro",
-          "saleEurPerM2": 3709.95,
-          "rentEurPerM2": 13.55,
-          "yoyPct": 14.61,
-          "rentYoyPct": 2.19,
+          "sourceName": "Mercado",
+          "saleEurPerM2": 2967,
+          "rentEurPerM2": 14,
+          "yoyPct": null,
+          "rentYoyPct": 2.2,
           "asOf": "2026-08",
-          "source": "Fotocasa, Centro, 2026-08"
+          "source": "Fotocasa, Mercado, август 2026"
         },
         {
           "id": "centro",
           "sourceName": "Centro",
           "saleEurPerM2": 3709.95,
-          "rentEurPerM2": 13.55,
+          "rentEurPerM2": 14.17,
           "yoyPct": 14.61,
-          "rentYoyPct": 2.19,
+          "rentYoyPct": 6.86,
           "asOf": "2026-08",
           "source": "Fotocasa, Centro, 2026-08"
         },
@@ -54,9 +54,9 @@
         {
           "id": "pla-bon-repos",
           "sourceName": "Pla - Carolinas",
-          "saleEurPerM2": 2134.83,
+          "saleEurPerM2": 2133.81,
           "rentEurPerM2": 14.34,
-          "yoyPct": 10.26,
+          "yoyPct": 10.21,
           "rentYoyPct": 21.94,
           "asOf": "2026-08",
           "source": "Fotocasa, Pla - Carolinas, 2026-08"
@@ -84,9 +84,9 @@
         {
           "id": "carolinas",
           "sourceName": "Pla - Carolinas",
-          "saleEurPerM2": 2134.83,
+          "saleEurPerM2": 2133.81,
           "rentEurPerM2": 14.34,
-          "yoyPct": 10.26,
+          "yoyPct": 10.21,
           "rentYoyPct": 21.94,
           "asOf": "2026-08",
           "source": "Fotocasa, Pla - Carolinas, 2026-08"
@@ -94,9 +94,9 @@
         {
           "id": "albufereta",
           "sourceName": "Playa de San Juan - El Cabo de las Huertas",
-          "saleEurPerM2": 3697.09,
+          "saleEurPerM2": 3700.4,
           "rentEurPerM2": 15.37,
-          "yoyPct": 2.7,
+          "yoyPct": 2.98,
           "rentYoyPct": 6.15,
           "asOf": "2026-08",
           "source": "Fotocasa, Playa de San Juan - El Cabo de las Huertas, 2026-08"
@@ -104,9 +104,9 @@
         {
           "id": "cabo-huertas",
           "sourceName": "Playa de San Juan - El Cabo de las Huertas",
-          "saleEurPerM2": 3697.09,
+          "saleEurPerM2": 3700.4,
           "rentEurPerM2": 15.37,
-          "yoyPct": 2.7,
+          "yoyPct": 2.98,
           "rentYoyPct": 6.15,
           "asOf": "2026-08",
           "source": "Fotocasa, Playa de San Juan - El Cabo de las Huertas, 2026-08"
@@ -114,9 +114,9 @@
         {
           "id": "playa-san-juan",
           "sourceName": "Playa de San Juan - El Cabo de las Huertas",
-          "saleEurPerM2": 3697.09,
+          "saleEurPerM2": 3700.4,
           "rentEurPerM2": 15.37,
-          "yoyPct": 2.7,
+          "yoyPct": 2.98,
           "rentYoyPct": 6.15,
           "asOf": "2026-08",
           "source": "Fotocasa, Playa de San Juan - El Cabo de las Huertas, 2026-08"
@@ -216,9 +216,9 @@
           "id": "acantilado-lanuza",
           "sourceName": "Pueblo Acantilado - Lanuza",
           "saleEurPerM2": 2932.86,
-          "rentEurPerM2": 13.42,
+          "rentEurPerM2": 13.56,
           "yoyPct": -5.68,
-          "rentYoyPct": 2.84,
+          "rentYoyPct": 3.91,
           "asOf": "2026-08",
           "source": "Fotocasa, Pueblo Acantilado - Lanuza, 2026-08"
         }

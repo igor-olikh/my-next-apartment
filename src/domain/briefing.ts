@@ -11,10 +11,10 @@ const WANT_RU = {
 } as const;
 
 function roomsRu(n: number): string {
-  if (n === 1) return "1 комнату";
-  if (n === 2) return "2 комнаты";
-  if (n === 3) return "3 комнаты";
-  return `${n} комнаты`;
+  if (n === 1) return "1 спальню";
+  if (n === 2) return "2 спальни";
+  if (n === 3) return "3 спальни";
+  return `${n} спальни`;
 }
 
 function conflict(profile: BuyerProfile, picks: DistrictFit[]): string | null {
@@ -104,22 +104,25 @@ function pathVerdict(profile: BuyerProfile, picks: DistrictFit[]): string {
 
 function marketLines(profile: BuyerProfile, ranked: DistrictFit[], cat: Catalog): string[] {
   const m = cat.marketOf(profile.place);
+  const bank = m.tinsaEurPerM2;
   const lines =
     profile.place === "campello"
       ? [
-          `Эль-Кампельо ${formatM2(m.eurPerM2)}, за год ${formatPct(m.yoyPct)}, за три месяца ${formatPct(m.threeMonthPct)}. После бешеного 2025 рост почти встал. Аликанте город — 2 705.`,
-          m.note,
+          `В Эль-Кампельо продавцы просят ${formatM2(m.eurPerM2)}. За год ${formatPct(m.yoyPct)} — рост почти остановился. Это не Аликанте, это соседний город у того же моря.`,
+          "Посёлок дешевле пляжа. Мучависта — продолжение Сан-Хуана, и она уже дороже. Не путай три разных места: посёлок, пляж Кампельо, Мучависта.",
         ]
       : [
-          `Город на историческом максимуме объявлений: ${formatM2(m.eurPerM2)}. За год ${formatPct(m.yoyPct)}, за три месяца ${formatPct(m.threeMonthPct)}. Испания растёт быстрее (${formatPct(m.spainYoyPct)}). Аликанте уже дорогой, но не самый жадный.`,
-          m.note,
+          `Продавцы в объявлениях просят ${formatM2(m.eurPerM2)}. За год жильё подорожало на ${formatPct(m.yoyPct)}.`,
+          bank
+            ? `Банк обычно оценивает дешевле (около ${formatM2(bank)}). Разница — запас торга, не повод переплачивать «как все».`
+            : m.note,
         ];
   if (profile.place === "alicante" && profile.want === "beach") {
     lines[1] =
-      "Пляж продаёт август. Сан-Хуан ещё плюс. Рядом Эль-Кампельо: свой город, то же море, посёлок 2 199 €/м². Мучависта уже дороже Сан-Хуана.";
+      "Пляж в августе врёт. Сан-Хуан дорогой. Рядом свой город Эль-Кампельо: то же море, посёлок сильно дешевле. Переключи место сверху, если хочешь море.";
   }
   if (ranked.filter((f) => f.affordable && f.lifeScore >= 52).length === 0) {
-    lines.push("В твоём срезе живых районов почти нет. Рынок не «подожди скидку». Ты просишь то, чего за эти деньги мало.");
+    lines.push("Под эти условия почти нечего купить. Не жди скидку из воздуха. Отпусти море, комнату или бюджет.");
   }
   return lines.slice(0, 2);
 }
@@ -152,9 +155,9 @@ function ignoreLines(profile: BuyerProfile, picks: DistrictFit[], skipIds: Set<s
     lines.push("«5 минут до пляжа» через трассу — не море.");
   }
   if (profile.mustHaveElevator) {
-    lines.push("Ático без лифта и bajo на шумной улице — сразу закрывать.");
+    lines.push("Последний этаж без лифта и первый этаж на шумной улице — сразу закрывать.");
   }
-  lines.push("Лицензия turística и «инвест + жить» — не этот поиск. Живая аренда жильцов — сигнал, что район работает.");
+  lines.push("Объявления «для туристов» и «инвест + жить» — не твой поиск. Ты ищешь дом, в котором проснёшься в январе.");
 
   return lines.slice(0, 7);
 }
@@ -179,7 +182,7 @@ function actions(profile: BuyerProfile, picks: DistrictFit[]): string[] {
     );
   }
   list.push(
-    "На просмотре: nota simple, comunidad и долги дома, ориентация, сколько дверей — туристы. Две минуты у открытого окна. Август врёт. Нужен ещё январь.",
+    "На просмотре спроси: кто живёт в доме круглый год, сколько платят за дом каждый месяц, куда окна. Постой две минуты у открытого окна. Лето врёт — нужен ещё зимний день.",
   );
   return list.slice(0, 3);
 }
@@ -202,7 +205,8 @@ export function buildBriefing(profile: BuyerProfile, cat: Catalog = STATIC_CATAL
 
   const inBudget = ranked.filter((f) => f.affordable && matchesWant(f, profile)).length;
   const m = cat.marketOf(profile.place);
-  const evidence = `срез: ${roomsRu(profile.minRooms)}, ${WANT_RU[profile.want]}, ${profile.hasCar ? "машина" : "без машины"} · медиана ${m.nameRu.toLowerCase()} ${formatM2(m.eurPerM2)} · ${inBudget} живых районов в бюджете`;
+  const n = inBudget === 1 ? "1 подходящий район" : inBudget >= 2 && inBudget <= 4 ? `${inBudget} подходящих района` : `${inBudget} подходящих районов`;
+  const evidence = `Ищем: ${roomsRu(profile.minRooms)}, ${WANT_RU[profile.want]}, ${profile.hasCar ? "с машиной" : "без машины"}. В твои деньги сейчас ${n}. Метр в ${m.nameRu} просят ${formatM2(m.eurPerM2)}.`;
   const rentOps = findRentOpportunities(profile, picks, cat);
   const rentKeep = new Set(rentOps.filter((o) => o.kind !== "yield_trap").map((o) => o.districtId));
 
