@@ -1,8 +1,10 @@
 export type LifeWant = "quiet" | "city" | "beach";
 export type PlaceId = "alicante" | "campello";
+export type Goal = "live" | "let";
 
 export interface BuyerProfile {
   place: PlaceId;
+  goal: Goal;
   maxBudgetEur: number;
   minRooms: number;
   want: LifeWant;
@@ -41,18 +43,20 @@ export interface DistrictRent {
   quality: "reported" | "estimated";
 }
 
-export type RentKind = "rent_instead" | "people_pay" | "yield_trap";
+export type LetStamp = "can_let" | "caution" | "not_this";
 
-export interface RentOpportunity {
-  districtId: string;
-  nameRu: string;
-  kind: RentKind;
+export interface LetFit {
+  district: District;
+  stamp: LetStamp;
   yieldPct: number;
   monthEur: number;
-  sqm: number;
-  headline: string;
-  why: string;
-  caution: string;
+  typicalAskEur: number;
+  typicalSqm: number;
+  cashToMoveIn: number;
+  affordable: boolean;
+  stretch: boolean;
+  outOfReach: boolean;
+  reasons: string[];
 }
 
 export interface District {
@@ -123,7 +127,7 @@ export interface Briefing {
   evidence: string;
   marketLines: string[];
   recommended: DistrictFit[];
-  rentOps: RentOpportunity[];
+  letPicks: LetFit[];
   ignored: string[];
   actions: string[];
   traps: string[];

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildBriefing } from "./briefing";
+import { recommendedLet } from "./let";
 import { cashToMoveIn } from "./money";
-import { findRentOpportunities } from "./rent";
 import { DEFAULT_PROFILE, flagListing, recommended } from "./score";
 import type { BuyerProfile } from "./types";
 
@@ -96,15 +96,18 @@ describe("owner-occupier scoring", () => {
     expect(brief.verdict.length).toBeGreaterThan(20);
   });
 
-  it("flags a living rental path when the right district is a stretch to buy", () => {
-    const picks = recommended(city);
-    const ops = findRentOpportunities(city, picks);
-    expect(ops.some((o) => o.kind === "rent_instead")).toBe(true);
-    expect(ops.some((o) => o.kind === "people_pay" && o.districtId === "carolinas")).toBe(true);
-    expect(ops.every((o) => o.districtId !== "san-gabriel")).toBe(true);
-    expect(ops.every((o) => o.districtId !== "playa-san-juan")).toBe(true);
-    const brief = buildBriefing(city);
-    expect(brief.ignored.some((line) => line.startsWith("Каролинас"))).toBe(false);
+  it("let mode ranks residential yield, not tourist beach", () => {
+    const landlord: BuyerProfile = { ...DEFAULT_PROFILE, goal: "let" };
+    const ids = recommendedLet(landlord).map((f) => f.district.id);
+    expect(ids.length).toBeGreaterThan(0);
+    expect(ids).not.toContain("san-gabriel");
+    expect(ids).not.toContain("playa-san-juan");
+    expect(ids).not.toContain("muchavista");
+    expect(ids).not.toContain("centro");
+    const brief = buildBriefing(landlord);
+    expect(brief.letPicks.length).toBeGreaterThan(0);
+    expect(brief.verdict.toLowerCase()).toMatch(/сдавать|жильц/);
+    expect(brief.recommended.length).toBe(0);
   });
 
   it("El Campello is a separate town, not an Alicante barrio", () => {
@@ -122,7 +125,7 @@ describe("owner-occupier scoring", () => {
     expect(memo.toLowerCase()).toMatch(/кампельо|мучависта/);
   });
 
-  it("cheap listing in a high-rent street gets a rent heat flag", () => {
+  it("let-mode listing shows gross yield for tenants, not a tourist play", () => {
     const flags = flagListing(
       {
         districtId: "carolinas",
@@ -136,8 +139,8 @@ describe("owner-occupier scoring", () => {
         priceCuts: 0,
         hasAc: true,
       },
-      city,
+      { ...city, goal: "let" },
     );
-    expect(flags.some((f) => f.code === "rent-heat" && f.severity === "good")).toBe(true);
+    expect(flags.some((f) => f.code === "let-yield")).toBe(true);
   });
 });

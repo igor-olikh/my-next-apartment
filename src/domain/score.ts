@@ -1,6 +1,6 @@
 import { placeOf } from "../data/districts";
 import { STATIC_CATALOG, type Catalog } from "../runtime/catalog";
-import { cashToMoveIn, formatMonth, grossYieldPct, typicalAsk, typicalRentMonth, typicalSqm } from "./money";
+import { cashToMoveIn, grossYieldPct, typicalAsk, typicalSqm } from "./money";
 import type {
   BuyerProfile,
   District,
@@ -266,30 +266,22 @@ export function flagListing(listing: ListingInput, profile: BuyerProfile, cat: C
     });
   }
   const rent = cat.rentOf(district.id);
-  if (rent && m2 > 0 && district.scores.flood < 6 && district.scores.touristPressure < 8) {
+  if (profile.goal === "let" && rent && m2 > 0 && district.scores.flood < 6 && district.scores.touristPressure < 8) {
     const y = grossYieldPct(m2, rent.eurPerM2);
     const place = placeOf(district);
     const cityY = grossYieldPct(cat.marketOf(place).eurPerM2, cat.placeRent(place).eurPerM2);
-    const month = typicalRentMonth(rent.eurPerM2, profile.minRooms);
-    if (y >= cityY + 1.8) {
-      flags.push({
-        code: "rent-heat",
-        severity: "good",
-        text: `По этой цене аренда в районе живая (~${y.toFixed(1)}% грубых, город ~${cityY.toFixed(1)}%). Не Airbnb. Спроси, кто снимает на улице. Ориентир аренды твоих метров: ${formatMonth(month)}.`,
-      });
-    } else if (rent.yoyPct != null && rent.yoyPct >= 12 && fit.lifeScore < 62) {
-      flags.push({
-        code: "rent-demand",
-        severity: "good",
-        text: `Район не топ по жизни, но аренда за год ${rent.yoyPct > 0 ? "+" : ""}${rent.yoyPct}%. Люди снимают. Если дом нормальный — не сбрасывай.`,
-      });
-    }
+    flags.push({
+      code: "let-yield",
+      severity: y >= cityY + 0.8 ? "good" : "warn",
+      text: `Если сдавать жильцам: с этой цены за год грубо ${y.toFixed(1)}%. В городе обычно ${cityY.toFixed(1)}%. Это до налога и пустых месяцев.`,
+    });
   }
   return flags;
 }
 
 export const DEFAULT_PROFILE: BuyerProfile = {
   place: "alicante",
+  goal: "live",
   maxBudgetEur: 250000,
   minRooms: 2,
   want: "city",

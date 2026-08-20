@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { SOURCES } from "../data/market";
 import { buildBriefing } from "../domain/briefing";
-import { cashToMoveIn, formatEur, formatM2, formatPct } from "../domain/money";
+import { cashToMoveIn, formatEur, formatM2, formatMonth, formatPct } from "../domain/money";
 import type { CollectStatus, MarketSnapshot } from "../domain/snapshot";
 import { DEFAULT_PROFILE, flagListing } from "../domain/score";
 import { STATIC_CATALOG, createCatalog } from "../runtime/catalog";
-import type { BuyerProfile, DistrictFit, LifeWant, ListingFlag, PlaceId, RentKind } from "../domain/types";
+import type { BuyerProfile, DistrictFit, Goal, LetFit, LifeWant, ListingFlag, PlaceId } from "../domain/types";
 
 const WANTS: { id: LifeWant; label: string }[] = [
   { id: "quiet", label: "тихо" },
@@ -30,10 +30,10 @@ function stamp(fit: DistrictFit): string {
   return "можно, с оговоркой";
 }
 
-function rentStamp(kind: RentKind): string {
-  if (kind === "rent_instead") return "лучше снять";
-  if (kind === "people_pay") return "здесь живут в аренде";
-  return "дешево не значит хорошо";
+function letStamp(fit: LetFit): string {
+  if (fit.stamp === "can_let") return "можно сдавать";
+  if (fit.stamp === "caution") return "осторожно";
+  return "не это";
 }
 
 export function BriefingPage() {
@@ -52,6 +52,10 @@ export function BriefingPage() {
   const [status, setStatus] = useState<CollectStatus | null>(null);
 
   useEffect(() => {
+    const g = new URLSearchParams(window.location.search).get("goal");
+    if (g === "let" || g === "live") {
+      setProfile((prev) => ({ ...prev, goal: g }));
+    }
     void Promise.all([
       fetch("/api/snapshot").then((r) => (r.ok ? r.json() : null)),
       fetch("/api/status").then((r) => (r.ok ? r.json() : null)),
@@ -82,8 +86,17 @@ export function BriefingPage() {
       <header className="letterhead">
         <p className="kicker">Следующая квартира</p>
         <p className="give">
-          Это ответ на вопрос: <strong>куда смотреть жильё, чтобы жить самому</strong>, за твои деньги. Не каталог
-          объявлений. Не совет «купи вот это». Три района, цена, чего избегать, что сделать на этой неделе.
+          {profile.goal === "let" ? (
+            <>
+              Это ответ: <strong>куда купить, чтобы сдавать жильцам</strong>, не туристам. Не каталог. Не Airbnb.
+              Три района, грубый процент, чего не брать.
+            </>
+          ) : (
+            <>
+              Это ответ: <strong>куда смотреть жильё, чтобы жить самому</strong>, за твои деньги. Не каталог
+              объявлений. Три района, цена, чего избегать.
+            </>
+          )}
         </p>
         <p className="dates">
           {market.nameRu}. Цены из объявлений, {market.asOf}. Сами обновляются.
@@ -92,7 +105,27 @@ export function BriefingPage() {
       </header>
 
       <form className="profile" onSubmit={(e) => e.preventDefault()}>
-        <p className="hint">Поставь как для себя. Текст ниже — ответ под эти условия.</p>
+        <p className="hint">Поставь условия. Текст ниже — ответ только на выбранный вопрос.</p>
+        <div className="row">
+          <span className="lbl">Зачем</span>
+          <div className="stamps">
+            {(
+              [
+                { id: "live" as Goal, label: "жить" },
+                { id: "let" as Goal, label: "сдавать" },
+              ] as const
+            ).map((g) => (
+              <button
+                key={g.id}
+                type="button"
+                className={profile.goal === g.id ? "on" : ""}
+                onClick={() => patch({ goal: g.id })}
+              >
+                {g.label}
+              </button>
+            ))}
+          </div>
+        </div>
         <div className="row">
           <span className="lbl">Город</span>
           <div className="stamps">
@@ -135,32 +168,36 @@ export function BriefingPage() {
             ))}
           </div>
         </div>
-        <div className="row">
-          <span className="lbl">Хочу</span>
-          <div className="stamps">
-            {WANTS.map((w) => (
-              <button
-                key={w.id}
-                type="button"
-                className={profile.want === w.id ? "on" : ""}
-                onClick={() => patch({ want: w.id })}
-              >
-                {w.label}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="row">
-          <span className="lbl">Машина</span>
-          <div className="stamps">
-            <button type="button" className={!profile.hasCar ? "on" : ""} onClick={() => patch({ hasCar: false })}>
-              нет
-            </button>
-            <button type="button" className={profile.hasCar ? "on" : ""} onClick={() => patch({ hasCar: true })}>
-              есть
-            </button>
-          </div>
-        </div>
+        {profile.goal === "live" && (
+          <>
+            <div className="row">
+              <span className="lbl">Хочу</span>
+              <div className="stamps">
+                {WANTS.map((w) => (
+                  <button
+                    key={w.id}
+                    type="button"
+                    className={profile.want === w.id ? "on" : ""}
+                    onClick={() => patch({ want: w.id })}
+                  >
+                    {w.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="row">
+              <span className="lbl">Машина</span>
+              <div className="stamps">
+                <button type="button" className={!profile.hasCar ? "on" : ""} onClick={() => patch({ hasCar: false })}>
+                  нет
+                </button>
+                <button type="button" className={profile.hasCar ? "on" : ""} onClick={() => patch({ hasCar: true })}>
+                  есть
+                </button>
+              </div>
+            </div>
+          </>
+        )}
         <div className="row">
           <span className="lbl">Лифт</span>
           <div className="stamps">
@@ -214,8 +251,34 @@ export function BriefingPage() {
       </section>
 
       <section>
-        <p className="section">Смотри эти районы</p>
-        {brief.recommended.length === 0 ? (
+        <p className="section">{profile.goal === "let" ? "Куда купить под сдачу" : "Смотри эти районы"}</p>
+        {profile.goal === "let" ? (
+          brief.letPicks.length === 0 ? (
+            <p className="body">Под сдачу жильцам в эти деньги почти нечего. Не бери пляж «ради процента».</p>
+          ) : (
+            brief.letPicks.map((fit, i) => (
+              <article key={fit.district.id} className="district">
+                <p className="ord">
+                  {i + 1}. {letStamp(fit)}
+                </p>
+                <h2>{fit.district.nameRu}</h2>
+                <p className="body">{fit.district.character}</p>
+                <p className="price">
+                  Купить похожую квартиру: около {formatEur(fit.typicalAskEur)}. Жилец за твои метры — примерно{" "}
+                  {formatMonth(fit.monthEur)}. Грубо {fit.yieldPct.toFixed(1)}% в год с цены покупки, до налога и пустых
+                  месяцев.
+                  {fit.stretch ? " Покупка больше бюджета: торг или меньше метров." : ""}
+                </p>
+                {fit.reasons.map((r) => (
+                  <p key={r} className="body">
+                    {r}
+                  </p>
+                ))}
+                <p className="trap">Осторожно: {fit.district.trap}</p>
+              </article>
+            ))
+          )
+        ) : brief.recommended.length === 0 ? (
           <p className="body">Под эти условия покупать почти нечего. Подвинь бюджет, спальни или «хочу».</p>
         ) : (
           brief.recommended.map((fit, i) => (
@@ -246,24 +309,6 @@ export function BriefingPage() {
           ))}
         </ol>
       </section>
-
-      {brief.rentOps.length > 0 && (
-        <section>
-          <p className="section">Имеет смысл снять</p>
-          <p className="body">
-            Ты ищешь жильё для себя. Иногда купить нужный район не влезает, а снять там — нормально. Иногда район не
-            красивый, но люди там живут и платят за аренду: значит место живое.
-          </p>
-          {brief.rentOps.map((op) => (
-            <article key={op.kind + op.districtId} className="district">
-              <p className="ord">{rentStamp(op.kind)}</p>
-              <h2>{op.nameRu}</h2>
-              <p className="body">{op.why}</p>
-              <p className="trap">{op.caution}</p>
-            </article>
-          ))}
-        </section>
-      )}
 
       <section>
         <p className="section">Сюда не ходи</p>

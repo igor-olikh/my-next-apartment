@@ -1,8 +1,8 @@
 import { STATIC_CATALOG, type Catalog } from "../runtime/catalog";
+import { cityYieldPct, ignoredLet, recommendedLet } from "./let";
 import { formatEur, formatM2, formatPct } from "./money";
-import { findRentOpportunities } from "./rent";
 import { ignoredFits, matchesWant, rankDistricts, recommended } from "./score";
-import type { Briefing, BuyerProfile, DistrictFit, VerdictKind } from "./types";
+import type { Briefing, BuyerProfile, DistrictFit, LetFit, VerdictKind } from "./types";
 
 const WANT_RU = {
   quiet: "тихо",
@@ -162,6 +162,41 @@ function ignoreLines(profile: BuyerProfile, picks: DistrictFit[], skipIds: Set<s
   return lines.slice(0, 7);
 }
 
+function letVerdict(profile: BuyerProfile, picks: LetFit[], cat: Catalog): string {
+  const cityY = cityYieldPct(profile.place, cat);
+  if (picks.length === 0) {
+    return `Под сдачу жильцам в ${formatEur(profile.maxBudgetEur)} живого пути нет. Не бери пляж и дешёвый край «ради процента».`;
+  }
+  const names = picks.map((p) => p.district.nameRu);
+  const top = picks[0];
+  return `Чтобы сдавать жильцам, не туристам: смотри ${names.join(", ")}. В ${top.district.nameRu} жилец за год даёт примерно ${top.yieldPct.toFixed(1)}% с цены покупки. В городе обычно ${cityY.toFixed(1)}%. Это до налога и пустых месяцев.`;
+}
+
+function letMarketLines(profile: BuyerProfile, cat: Catalog): string[] {
+  const m = cat.marketOf(profile.place);
+  const rent = cat.placeRent(profile.place);
+  const cityY = cityYieldPct(profile.place, cat);
+  return [
+    `Покупка в ${m.nameRu}: продавцы просят ${formatM2(m.eurPerM2)}. Аренда жильцам: около ${rent.eurPerM2} € за метр в месяц.`,
+    `Грубо по городу жилец за год даёт ${cityY.toFixed(1)}% от цены покупки. Дальше налог, пустые месяцы, ремонт. Пляж для гостей сюда не кладём.`,
+  ];
+}
+
+function letActions(picks: LetFit[]): string[] {
+  const first = picks[0];
+  const list: string[] = [];
+  if (first) {
+    list.push(
+      `Пройди ${first.district.nameRu} в будний день. Смотри, кто живёт в подъезде круглый год, не чемоданы.`,
+    );
+  } else {
+    list.push("Не покупай «под туристов». Сначала жильцы на месяцы.");
+  }
+  list.push("В объявлении закрывай: лицензия туриста, только лето, дом без лифта выше второго.");
+  list.push("На просмотре спроси: сколько платят за дом каждый месяц, сколько квартир пустует зимой.");
+  return list.slice(0, 3);
+}
+
 function actions(profile: BuyerProfile, picks: DistrictFit[]): string[] {
   const first = picks[0];
   const list: string[] = [];
@@ -188,6 +223,29 @@ function actions(profile: BuyerProfile, picks: DistrictFit[]): string[] {
 }
 
 export function buildBriefing(profile: BuyerProfile, cat: Catalog = STATIC_CATALOG): Briefing {
+  if (profile.goal === "let") {
+    const letPicks = recommendedLet(profile, cat);
+    const cityY = cityYieldPct(profile.place, cat);
+    const inBudget = letPicks.filter((f) => f.affordable).length;
+    const n =
+      inBudget === 1
+        ? "1 район в бюджете"
+        : inBudget >= 2 && inBudget <= 4
+          ? `${inBudget} района в бюджете`
+          : `${inBudget} районов в бюджете`;
+    return {
+      kind: letPicks.length === 0 ? "broke" : "path",
+      verdict: letVerdict(profile, letPicks, cat),
+      evidence: `Ищем: купить и сдать жильцам, ${roomsRu(profile.minRooms)}. ${n}. По городу грубо ${cityY.toFixed(1)}% в год до налога.`,
+      marketLines: letMarketLines(profile, cat),
+      recommended: [],
+      letPicks,
+      ignored: ignoredLet(profile, letPicks, cat),
+      actions: letActions(letPicks),
+      traps: letPicks.map((p) => p.district.trap),
+    };
+  }
+
   const ranked = rankDistricts(profile, cat);
   const picks = recommended(profile, cat);
   const brokeLine = broke(profile, ranked);
@@ -207,8 +265,6 @@ export function buildBriefing(profile: BuyerProfile, cat: Catalog = STATIC_CATAL
   const m = cat.marketOf(profile.place);
   const n = inBudget === 1 ? "1 подходящий район" : inBudget >= 2 && inBudget <= 4 ? `${inBudget} подходящих района` : `${inBudget} подходящих районов`;
   const evidence = `Ищем: ${roomsRu(profile.minRooms)}, ${WANT_RU[profile.want]}, ${profile.hasCar ? "с машиной" : "без машины"}. В твои деньги сейчас ${n}. Метр в ${m.nameRu} просят ${formatM2(m.eurPerM2)}.`;
-  const rentOps = findRentOpportunities(profile, picks, cat);
-  const rentKeep = new Set(rentOps.filter((o) => o.kind !== "yield_trap").map((o) => o.districtId));
 
   return {
     kind,
@@ -216,8 +272,8 @@ export function buildBriefing(profile: BuyerProfile, cat: Catalog = STATIC_CATAL
     evidence,
     marketLines: marketLines(profile, ranked, cat),
     recommended: picks,
-    rentOps,
-    ignored: ignoreLines(profile, picks, rentKeep, cat),
+    letPicks: [],
+    ignored: ignoreLines(profile, picks, new Set(), cat),
     actions: actions(profile, picks),
     traps: picks.map((p) => p.district.trap),
   };
