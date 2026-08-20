@@ -109,9 +109,8 @@ select {
 .field span,
 .lbl {
   color: var(--muted);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.86rem;
+  letter-spacing: 0;
 }
 
 .field b {
@@ -132,23 +131,22 @@ select {
 }
 
 .stamps button {
-  border: 1px solid var(--rule);
-  background: transparent;
-  padding: 0.18rem 0.65rem;
+  border: 1px solid transparent;
+  background: #e8e0d4;
+  padding: 0.32rem 0.9rem;
   cursor: pointer;
   color: var(--ink);
+  border-radius: 999px;
 }
 
 .stamps button.on {
-  border-color: var(--ink);
   background: var(--ink);
   color: var(--paper);
 }
 
 .section {
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 0.82rem;
+  letter-spacing: 0;
   color: var(--muted);
   margin: 0 0 0.55rem;
 }
@@ -178,9 +176,7 @@ select {
 
 .nums small {
   display: block;
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.78rem;
   color: var(--muted);
 }
 
@@ -200,9 +196,7 @@ select {
 
 .ord {
   margin: 0;
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.86rem;
   color: var(--seal);
 }
 
@@ -284,11 +278,12 @@ footer ul {
 .listing button {
   grid-column: 1 / -1;
   justify-self: start;
-  border: 1px solid var(--ink);
+  border: 0;
   background: var(--ink);
   color: var(--paper);
-  padding: 0.4rem 1rem;
+  padding: 0.5rem 1.2rem;
   cursor: pointer;
+  border-radius: 999px;
 }
 
 .flags .good {
