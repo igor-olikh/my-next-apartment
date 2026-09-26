@@ -87,7 +87,7 @@ export function fitDistrict(district: District, profile: BuyerProfile): District
   if (stretch) warnings.push("В бюджет влезаешь впритык. Торг или меньше метры.");
   if (outOfReach) warnings.push("Типичная квартира здесь дороже потолка.");
   if (!profile.hasCar && s.carNeed >= 7) warnings.push("Без машины это почти остров.");
-  if (profile.mustHaveElevator && s.elevatorShare <= 4) warnings.push("Лифт часто нет. Каско и старый фонд.");
+  if (profile.mustHaveElevator && s.elevatorShare <= 4) warnings.push("Лифт часто нет. Casco Antiguo и старый фонд.");
   if (s.flood >= 6) warnings.push("Вода. Не «у моря», а риск.");
   if (s.touristPressure >= 8) warnings.push("Соседи часто гости.");
   if (district.price.yoyPct != null && district.price.yoyPct >= 14) {
@@ -234,14 +234,14 @@ export function flagListing(listing: ListingInput, profile: BuyerProfile, cat: C
     flags.push({
       code: "attic-heat",
       severity: "bad",
-      text: "Верхний этаж без кондиционера. Июль в Аликанте это не теория.",
+      text: "Верхний этаж без кондиционера. Июль в Alicante это не теория.",
     });
   }
   if (district.scores.flood >= 6) {
     flags.push({
       code: "flood",
       severity: "bad",
-      text: `${district.nameRu}: сначала вода и порт, потом цена.`,
+      text: `${district.nameEs}: сначала вода и порт, потом цена.`,
     });
   }
   if (district.scores.touristPressure >= 8 && profile.want === "quiet") {
@@ -262,7 +262,7 @@ export function flagListing(listing: ListingInput, profile: BuyerProfile, cat: C
     flags.push({
       code: "area-ok",
       severity: "good",
-      text: `${district.nameRu} под твои условия живой. Дальше дом, не район.`,
+      text: `${district.nameEs} под твои условия живой. Дальше дом, не район.`,
     });
   }
   const rent = cat.rentOf(district.id);

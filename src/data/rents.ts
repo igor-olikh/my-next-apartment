@@ -5,7 +5,7 @@ export const PLACE_RENT: Record<PlaceId, { eurPerM2: number; yoyPct: number; asO
     eurPerM2: 14,
     yoyPct: 5.9,
     asOf: "2026-08",
-    source: "Fotocasa, аренда Аликанте, август 2026",
+    source: "Fotocasa, аренда Alicante, август 2026",
   },
   campello: {
     eurPerM2: 13,

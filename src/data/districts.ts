@@ -11,12 +11,12 @@ export function districtsIn(place: PlaceId): District[] {
 export const DISTRICTS: District[] = [
   {
     id: "ensanche",
-    nameRu: "Энсанче — Депутасьон",
+    nameRu: "Ensanche-Diputación",
     nameEs: "Ensanche-Diputación",
     character:
-      "Взрослый Аликанте. Широкие улицы, магазины, врачи, не открытка.",
+      "Взрослый Alicante. Широкие улицы, магазины, врачи, не открытка.",
     trap: "Парковка — налог района. Без гаража будешь ненавидеть вечер.",
-    viewRule: "Лифт, гараж, боковая улица. Не Рамбла. Не «ремонт» из кухни и ванной.",
+    viewRule: "Лифт, гараж, боковая улица. Не Rambla. Не «ремонт» из кухни и ванной.",
     scores: {
       walkability: 9,
       quiet: 6,
@@ -41,9 +41,9 @@ export const DISTRICTS: District[] = [
   },
   {
     id: "mercado",
-    nameRu: "Меркадо",
+    nameRu: "Mercado",
     nameEs: "Mercado",
-    character: "Центр для жизни: рынок, улицы, свои магазины. Не Каско.",
+    character: "Центр для жизни: рынок, улицы, свои магазины. Не Casco Antiguo.",
     trap: "Район в списке насыщения туристическими квартирами. Утро рынка — фургоны.",
     viewRule: "Лифт. Не дом над баром. Спроси по этажам, кто живёт, а кто чемодан.",
     scores: {
@@ -70,7 +70,7 @@ export const DISTRICTS: District[] = [
   },
   {
     id: "centro",
-    nameRu: "Центр / Каско",
+    nameRu: "Centro / Casco Antiguo",
     nameEs: "Centro / Casco Antiguo",
     character: "Красиво гулять. Тяжело жить: холмы, шум, чужие выходные.",
     trap: "Романтика без лифта — это июль, четвёртый этаж и сумки из Mercadona.",
@@ -99,7 +99,7 @@ export const DISTRICTS: District[] = [
   },
   {
     id: "benalua",
-    nameRu: "Беналуа",
+    nameRu: "Benalúa",
     nameEs: "Benalúa",
     character: "Настоящий город. Вокзал, свои люди, цена ещё человеческая.",
     trap: "У вокзала гудят поезда. Не путай тихую улицу и дом у путей.",
@@ -128,7 +128,7 @@ export const DISTRICTS: District[] = [
   },
   {
     id: "pla-bon-repos",
-    nameRu: "Пла-дель-Бон-Репос",
+    nameRu: "Pla del Bon Repós",
     nameEs: "Pla del Bon Repós",
     character: "Городская жизнь у больницы. Не пляж, не декорация.",
     trap: "Холмы. Без машины часть улиц утомляет. Дома разные по году.",
@@ -157,7 +157,7 @@ export const DISTRICTS: District[] = [
   },
   {
     id: "san-blas",
-    nameRu: "Сан-Блас — ПАУ",
+    nameRu: "San Blas-PAU",
     nameEs: "San Blas-PAU",
     character: "Новее, ровнее, скучнее. Лифт чаще. Городской быт без открытки.",
     trap: "Мало души. Дальше от моря и старого города, чем кажется на карте.",
@@ -186,7 +186,7 @@ export const DISTRICTS: District[] = [
   },
   {
     id: "campoamor",
-    nameRu: "Кампоамор",
+    nameRu: "Campoamor",
     nameEs: "Campoamor",
     character: "Свой район. Дешевле. Живут люди, не гости.",
     trap: "Дешёвый метр здесь — не ошибка рынка. Другой класс улиц и домов.",
@@ -215,7 +215,7 @@ export const DISTRICTS: District[] = [
   },
   {
     id: "carolinas",
-    nameRu: "Каролинас",
+    nameRu: "Carolinas",
     nameEs: "Carolinas",
     character: "Рабочий город. Можно жить. Нельзя брать «подешевле и как-нибудь».",
     trap: "Соседние улицы — разные жизни. Средняя цена района врёт.",
@@ -244,7 +244,7 @@ export const DISTRICTS: District[] = [
   },
   {
     id: "albufereta",
-    nameRu: "Альбуферета",
+    nameRu: "Albufereta",
     nameEs: "Albufereta",
     character: "Компромисс: море рядом, в город 10 минут на трамвае.",
     trap: "Часть домов старые. Где-то холм и лестницы к воде. «У моря» ≠ спуск лёгкий.",
@@ -273,7 +273,7 @@ export const DISTRICTS: District[] = [
   },
   {
     id: "cabo-huertas",
-    nameRu: "Кабо-де-лас-Уэртас",
+    nameRu: "Cabo de las Huertas",
     nameEs: "Cabo de las Huertas",
     character: "Жить у скал и моря. Это не город. Без машины почти остров.",
     trap: "Вид стоит денег каждый месяц: comunidad, ветер, лестницы, изоляция.",
@@ -302,9 +302,9 @@ export const DISTRICTS: District[] = [
   },
   {
     id: "playa-san-juan",
-    nameRu: "Плайя-де-Сан-Хуан",
+    nameRu: "Playa de San Juan",
     nameEs: "Playa de San Juan",
-    character: "Пляжный город рядом с Аликанте. В августе врёт. В январе пустеет.",
+    character: "Пляжный город рядом с Alicante. В августе врёт. В январе пустеет.",
     trap: "Ты платишь за лето. Соседи часто гости. Это не тихий район и не центр.",
     viewRule: "Приезжай в будни в 8 утра и в субботу в 23. Иначе купишь открытку.",
     scores: {
@@ -325,13 +325,13 @@ export const DISTRICTS: District[] = [
       eurPerM2: 4098,
       asOf: "2026-08",
       yoyPct: 11.5,
-      source: "Fotocasa, август 2026 (баррио, не вся зона Кабо)",
+      source: "Fotocasa, август 2026 (баррио, не вся зона Cabo de las Huertas)",
       quality: "reported",
     },
   },
   {
     id: "vistahermosa",
-    nameRu: "Вистаэрмоса",
+    nameRu: "Vistahermosa",
     nameEs: "Vistahermosa",
     character: "Тихо, зелено, свои дома. Городская жизнь далеко.",
     trap: "Без машины ты в пригороде. «Тихо» здесь значит «далеко».",
@@ -360,11 +360,11 @@ export const DISTRICTS: District[] = [
   },
   {
     id: "florida",
-    nameRu: "Флорида",
+    nameRu: "La Florida",
     nameEs: "La Florida",
-    character: "Флорида Баха — ещё живой город без открытки. Альта уже плотнее и проще.",
+    character: "Florida Baja — ещё живой город без открытки. Florida Alta уже плотнее и проще.",
     trap: "После ливня смотри низкие улицы. Не путай с Palmeral / Urbanova.",
-    viewRule: "Бери Баху, не Альту. Лифт. Не дом, который смотрит в кольцевую.",
+    viewRule: "Бери Florida Baja, не Florida Alta. Лифт. Не дом, который смотрит в кольцевую.",
     scores: {
       walkability: 6,
       quiet: 5,
@@ -389,7 +389,7 @@ export const DISTRICTS: District[] = [
   },
   {
     id: "san-gabriel",
-    nameRu: "Сан-Габриэль",
+    nameRu: "San Gabriel",
     nameEs: "San Gabriel",
     character: "Дешевле. Порт, промышленность, история воды. Не «море за копейки».",
     trap: "Наводнение 1982 и DANA 2025. Это не страшилка риелтора. Карта PATRICOVA.",
@@ -418,7 +418,7 @@ export const DISTRICTS: District[] = [
   },
   {
     id: "virgen-remedio",
-    nameRu: "Вирхен-дель-Ремедио",
+    nameRu: "Virgen del Remedio - Juan XXIII",
     nameEs: "Virgen del Remedio - Juan XXIII",
     character: "Самый дешёвый метр в городе. И самый быстрый рост. Это не подарок.",
     trap: "Плюс 25% за год — не качество жизни. Это догоняющий дешёвый край.",
@@ -448,10 +448,10 @@ export const DISTRICTS: District[] = [
   {
     id: "campello-pueblo",
     placeId: "campello",
-    nameRu: "Кампельо-посёлок",
+    nameRu: "Campello pueblo",
     nameEs: "Campello pueblo",
-    character: "Настоящий маленький город. Не Аликанте и не пляжная витрина.",
-    trap: "Холм. Пляж не за углом. Это жизнь посёлка, не Энсанче.",
+    character: "Настоящий маленький город. Не Alicante и не пляжная витрина.",
+    trap: "Холм. Пляж не за углом. Это жизнь посёлка, не Ensanche.",
     viewRule: "Лифт. Вечер вторника. Пройди путь до трамвая и до воды.",
     scores: {
       walkability: 7,
@@ -478,10 +478,10 @@ export const DISTRICTS: District[] = [
   {
     id: "campello-playa",
     placeId: "campello",
-    nameRu: "Кампельо-пляж",
+    nameRu: "Campello Playa",
     nameEs: "Campello Playa",
-    character: "Пляж своего города. Трамвай в Аликанте. Не Мучависта.",
-    trap: "Летом гости. Зимой тише Сан-Хуана, но это не центр Аликанте.",
+    character: "Пляж своего города. Трамвай в Alicante. Не Playa Muchavista.",
+    trap: "Летом гости. Зимой тише Playa de San Juan, но это не центр Alicante.",
     viewRule: "Трамвай пешком. Не первая линия, если жить круглый год.",
     scores: {
       walkability: 6,
@@ -508,10 +508,10 @@ export const DISTRICTS: District[] = [
   {
     id: "muchavista",
     placeId: "campello",
-    nameRu: "Мучависта",
+    nameRu: "Playa Muchavista",
     nameEs: "Playa Muchavista",
-    character: "То же море что Сан-Хуан. Уже дороже Сан-Хуана. Август врёт.",
-    trap: "Не «дешевле Аликанте». 4 532 €/м². Соседи часто гости.",
+    character: "То же море что Playa de San Juan. Уже дороже Playa de San Juan. Август врёт.",
+    trap: "Не «дешевле Alicante». 4 532 €/м². Соседи часто гости.",
     viewRule: "Январь и суббота в 23:00. Без машины тяжело. Не путай с посёлком.",
     scores: {
       walkability: 5,
@@ -538,7 +538,7 @@ export const DISTRICTS: District[] = [
   {
     id: "coveta-fuma",
     placeId: "campello",
-    nameRu: "Ковета-Фума",
+    nameRu: "Pueblo Español - Coveta Fumá",
     nameEs: "Pueblo Español - Coveta Fumá",
     character: "Бухты и скалы. Тише полосы. Нужна машина.",
     trap: "Метр за год +25%. Это жара, не секрет. Comunidad и ветер.",
@@ -568,7 +568,7 @@ export const DISTRICTS: District[] = [
   {
     id: "acantilado-lanuza",
     placeId: "campello",
-    nameRu: "Акантиладо — Лануса",
+    nameRu: "Pueblo Acantilado - Lanuza",
     nameEs: "Pueblo Acantilado - Lanuza",
     character: "Обрыв, свои дома, меньше витрины.",
     trap: "Без машины остров. Цена за год даже минус — спроси почему.",

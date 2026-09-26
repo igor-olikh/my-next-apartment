@@ -27,7 +27,7 @@ function noteFor(place: PlaceId, sale: number, asOf: string, snap: MarketSnapsho
     const mucha = ds.find((d) => d.id === "muchavista");
     const p = pueblo ? Math.round(pueblo.saleEurPerM2).toLocaleString("ru-RU") : "2 199";
     const m = mucha ? Math.round(mucha.saleEurPerM2).toLocaleString("ru-RU") : "4 532";
-    return `Это не район Аликанте. Свой город, трамвай L1, то же море что Сан-Хуан. Посёлок ${p} €/м². Мучависта ${m} — уже дороже пляжа Аликанте. Снимок ${asOf}.`;
+    return `Это не район Alicante. Свой город, трамвай L1, то же море что Playa de San Juan. Посёлок ${p} €/м². Playa Muchavista ${m} — уже дороже пляжа Alicante. Снимок ${asOf}.`;
   }
   const tinsa = snap?.tinsaEurPerM2 ?? MARKETS.alicante.tinsaEurPerM2;
   const t = tinsa ? tinsa.toLocaleString("ru-RU") : "нет";

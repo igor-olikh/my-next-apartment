@@ -28,15 +28,15 @@ function conflict(profile: BuyerProfile, picks: DistrictFit[]): string | null {
   }
   if (profile.want === "beach" && profile.maxBudgetEur < 220000) {
     if (profile.place === "campello") {
-      return `Море в Кампельо за ${formatEur(profile.maxBudgetEur)} почти не купить. Пляж посёлка ~3 305 €/м², Мучависта 4 532. Посёлок дешевле, но это не песок под окном.`;
+      return `Море в El Campello за ${formatEur(profile.maxBudgetEur)} почти не купить. Пляж посёлка ~3 305 €/м², Playa Muchavista 4 532. Посёлок дешевле, но это не песок под окном.`;
     }
-    return `Море в Аликанте за ${formatEur(profile.maxBudgetEur)} почти не купить. Сан-Хуан ~4 100 €/м². Рядом Эль-Кампельо: пляж посёлка 3 305, посёлок 2 199.`;
+    return `Море в Alicante за ${formatEur(profile.maxBudgetEur)} почти не купить. Playa de San Juan ~4 100 €/м². Рядом El Campello: пляж посёлка 3 305, посёлок 2 199.`;
   }
   if (picks.length === 0 && profile.want === "beach" && !profile.hasCar) {
     if (profile.place === "campello") {
-      return "Море без машины в Кампельо почти пусто. Либо пляж у трамвая, либо машина, либо не море.";
+      return "Море без машины в El Campello почти пусто. Либо пляж у трамвая, либо машина, либо не море.";
     }
-    return "Море без машины в этом бюджете почти пусто. Либо Альбуферета у трамвая, либо Эль-Кампельо у L1, либо машина, либо не море.";
+    return "Море без машины в этом бюджете почти пусто. Либо Albufereta у трамвая, либо El Campello у L1, либо машина, либо не море.";
   }
   if (picks.length === 0) {
     return "Под эти условия живого пути нет. Не «мало красивых». Пусто.";
@@ -58,7 +58,7 @@ function broke(profile: BuyerProfile, ranked: DistrictFit[]): string | null {
   const cheapestOk = [...pool].sort((a, b) => a.typicalAskEur - b.typicalAskEur)[0];
   if (!cheapestOk) return null;
   if (cheapestOk.typicalAskEur > profile.maxBudgetEur * 1.05) {
-    return `На ${formatEur(profile.maxBudgetEur)} этот класс жизни не покупается. Ориентир — ${formatEur(cheapestOk.typicalAskEur)} в районе ${cheapestOk.district.nameRu}.`;
+    return `На ${formatEur(profile.maxBudgetEur)} этот класс жизни не покупается. Ориентир — ${formatEur(cheapestOk.typicalAskEur)} в районе ${cheapestOk.district.nameEs}.`;
   }
   return null;
 }
@@ -71,7 +71,7 @@ function roomsInstr(n: number): string {
 }
 
 function pathVerdict(profile: BuyerProfile, picks: DistrictFit[]): string {
-  const names = picks.map((p) => p.district.nameRu);
+  const names = picks.map((p) => p.district.nameEs);
   const car = profile.hasCar ? "с машиной" : "без машины";
   const lift = profile.mustHaveElevator ? "Лифт обязателен." : "";
   if (names.length === 0) {
@@ -80,26 +80,26 @@ function pathVerdict(profile: BuyerProfile, picks: DistrictFit[]): string {
   const head = names[0];
   const rest = names.slice(1);
   const first = picks[0];
-  const inBudget = picks.filter((p) => p.affordable).map((p) => p.district.nameRu);
+  const inBudget = picks.filter((p) => p.affordable).map((p) => p.district.nameEs);
   if (first.stretch && inBudget.length) {
     return `${head} — та жизнь, которую ты просишь, но ориентир ${formatEur(first.typicalAskEur)}. В ${formatEur(profile.maxBudgetEur)} живёт ${inBudget.join(" и ")}.`;
   }
   if (profile.want === "city") {
     if (profile.place === "campello") {
-      return `Это не Аликанте. Город здесь — посёлок. С ${formatEur(profile.maxBudgetEur)}, ${roomsInstr(profile.minRooms)}, ${car} смотри ${head}${rest.length ? ", потом " + rest.join(" и ") : ""}.`;
+      return `Это не Alicante. Город здесь — посёлок. С ${formatEur(profile.maxBudgetEur)}, ${roomsInstr(profile.minRooms)}, ${car} смотри ${head}${rest.length ? ", потом " + rest.join(" и ") : ""}.`;
     }
     return `С ${formatEur(profile.maxBudgetEur)}, ${roomsInstr(profile.minRooms)}, ${car} смотри ${head}${rest.length ? ", потом " + rest.join(" и ") : ""}. Море будет прогулкой, не адресом.`;
   }
   if (profile.want === "beach") {
     if (profile.place === "campello") {
-      return `Море в Кампельо — ${head}${rest.length ? " или " + rest.join(" / ") : ""}. Мучависта дороже Сан-Хуана, не экономия. ${lift}`.trim();
+      return `Море в El Campello — ${head}${rest.length ? " или " + rest.join(" / ") : ""}. Playa Muchavista дороже Playa de San Juan, не экономия. ${lift}`.trim();
     }
     return `Море за эти деньги — ${head}${rest.length ? " или " + rest.join(" / ") : ""}. Не первая линия как план А. ${lift}`.trim();
   }
   if (profile.place === "campello") {
-    return `Тихо в Кампельо за ${formatEur(profile.maxBudgetEur)} — ${head}${rest.length ? ", иначе " + rest.join(" или ") : ""}. Мучависта летом снимаем.`;
+    return `Тихо в El Campello за ${formatEur(profile.maxBudgetEur)} — ${head}${rest.length ? ", иначе " + rest.join(" или ") : ""}. Playa Muchavista летом снимаем.`;
   }
-  return `Тихо за ${formatEur(profile.maxBudgetEur)} — ${head}${rest.length ? ", иначе " + rest.join(" или ") : ""}. Центр ночью и Сан-Хуан летом снимаем.`;
+  return `Тихо за ${formatEur(profile.maxBudgetEur)} — ${head}${rest.length ? ", иначе " + rest.join(" или ") : ""}. Центр ночью и Playa de San Juan летом снимаем.`;
 }
 
 function marketLines(profile: BuyerProfile, ranked: DistrictFit[], cat: Catalog): string[] {
@@ -108,8 +108,8 @@ function marketLines(profile: BuyerProfile, ranked: DistrictFit[], cat: Catalog)
   const lines =
     profile.place === "campello"
       ? [
-          `В Эль-Кампельо продавцы просят ${formatM2(m.eurPerM2)}. За год ${formatPct(m.yoyPct)} — рост почти остановился. Это не Аликанте, это соседний город у того же моря.`,
-          "Посёлок дешевле пляжа. Мучависта — продолжение Сан-Хуана, и она уже дороже. Не путай три разных места: посёлок, пляж Кампельо, Мучависта.",
+          `В El Campello продавцы просят ${formatM2(m.eurPerM2)}. За год ${formatPct(m.yoyPct)} — рост почти остановился. Это не Alicante, это соседний город у того же моря.`,
+          "Посёлок дешевле пляжа. Playa Muchavista — продолжение Playa de San Juan, и она уже дороже. Не путай три разных места: посёлок, пляж El Campello, Playa Muchavista.",
         ]
       : [
           `Продавцы в объявлениях просят ${formatM2(m.eurPerM2)}. За год жильё подорожало на ${formatPct(m.yoyPct)}.`,
@@ -119,7 +119,7 @@ function marketLines(profile: BuyerProfile, ranked: DistrictFit[], cat: Catalog)
         ];
   if (profile.place === "alicante" && profile.want === "beach") {
     lines[1] =
-      "Пляж в августе врёт. Сан-Хуан дорогой. Рядом свой город Эль-Кампельо: то же море, посёлок сильно дешевле. Переключи место сверху, если хочешь море.";
+      "Пляж в августе врёт. Playa de San Juan дорогой. Рядом свой город El Campello: то же море, посёлок сильно дешевле. Переключи место сверху, если хочешь море.";
   }
   if (ranked.filter((f) => f.affordable && f.lifeScore >= 52).length === 0) {
     lines.push("Под эти условия почти нечего купить. Не жди скидку из воздуха. Отпусти море, комнату или бюджет.");
@@ -135,20 +135,20 @@ function ignoreLines(profile: BuyerProfile, picks: DistrictFit[], skipIds: Set<s
     const d = f.district;
     if (skipIds.has(d.id)) continue;
     let why = d.trap;
-    if (profile.want === "beach" && d.scores.sea <= 4) why = "Это не море. Не плати за слово «Аликанте».";
+    if (profile.want === "beach" && d.scores.sea <= 4) why = "Это не море. Не плати за слово «Alicante».";
     if (profile.want === "city" && d.scores.walkability <= 5 && d.scores.carNeed >= 7) {
       why = "Это не город. Это жить в машине.";
     }
-    if (d.id === "centro" && profile.mustHaveElevator) why = "Лифт обязателен — Каско почти закрыт.";
-    if (d.id === "cabo-huertas" && !profile.hasCar) why = "Без машины Кабо — остров на скале.";
+    if (d.id === "centro" && profile.mustHaveElevator) why = "Лифт обязателен — Casco Antiguo почти закрыт.";
+    if (d.id === "cabo-huertas" && !profile.hasCar) why = "Без машины Cabo de las Huertas — остров на скале.";
     if (d.id === "vistahermosa" && !profile.hasCar) why = "Тихо здесь значит далеко. Без машины не сходится.";
-    if (d.id === "playa-san-juan" && profile.want === "quiet") why = "Ты хотел тихо. Сан-Хуан летом орёт, зимой пустеет.";
+    if (d.id === "playa-san-juan" && profile.want === "quiet") why = "Ты хотел тихо. Playa de San Juan летом орёт, зимой пустеет.";
     if (d.id === "playa-san-juan" && profile.want === "city") why = "Это курорт рядом с городом, не город.";
     if (d.id === "virgen-remedio") why = "Самый дешёвый метр и +25% за год. Не бери «пока дёшево».";
     if (d.id === "san-gabriel") why = "Не море за копейки. Порт и вода.";
-    if (d.id === "muchavista") why = "Дороже Сан-Хуана. Это курортная полоса, не посёлок.";
+    if (d.id === "muchavista") why = "Дороже Playa de San Juan. Это курортная полоса, не посёлок.";
     if (d.id === "campello-pueblo" && profile.want === "beach") why = "Посёлок живой, но песок не под окном.";
-    lines.push(`${d.nameRu} — ${why}`);
+    lines.push(`${d.nameEs} — ${why}`);
   }
 
   if (profile.want !== "beach") {
@@ -167,9 +167,9 @@ function letVerdict(profile: BuyerProfile, picks: LetFit[], cat: Catalog): strin
   if (picks.length === 0) {
     return `Под сдачу жильцам в ${formatEur(profile.maxBudgetEur)} живого пути нет. Не бери пляж и дешёвый край «ради процента».`;
   }
-  const names = picks.map((p) => p.district.nameRu);
+  const names = picks.map((p) => p.district.nameEs);
   const top = picks[0];
-  return `Чтобы сдавать жильцам, не туристам: смотри ${names.join(", ")}. В ${top.district.nameRu} жилец за год даёт примерно ${top.yieldPct.toFixed(1)}% с цены покупки. В городе обычно ${cityY.toFixed(1)}%. Это до налога и пустых месяцев.`;
+  return `Чтобы сдавать жильцам, не туристам: смотри ${names.join(", ")}. В ${top.district.nameEs} жилец за год даёт примерно ${top.yieldPct.toFixed(1)}% с цены покупки. В городе обычно ${cityY.toFixed(1)}%. Это до налога и пустых месяцев.`;
 }
 
 function letMarketLines(profile: BuyerProfile, cat: Catalog): string[] {
@@ -187,7 +187,7 @@ function letActions(picks: LetFit[]): string[] {
   const list: string[] = [];
   if (first) {
     list.push(
-      `Пройди ${first.district.nameRu} в будний день. Смотри, кто живёт в подъезде круглый год, не чемоданы.`,
+      `Пройди ${first.district.nameEs} в будний день. Смотри, кто живёт в подъезде круглый год, не чемоданы.`,
     );
   } else {
     list.push("Не покупай «под туристов». Сначала жильцы на месяцы.");
@@ -202,15 +202,15 @@ function actions(profile: BuyerProfile, picks: DistrictFit[]): string[] {
   const list: string[] = [];
   if (first) {
     list.push(
-      `Пройди ${first.district.nameRu} в будни утром и ещё раз после 21:00. ${first.district.viewRule}`,
+      `Пройди ${first.district.nameEs} в будни утром и ещё раз после 21:00. ${first.district.viewRule}`,
     );
   } else {
     list.push("Не листай Idealista «на удачу». Сначала отпусти одно условие: море, комнаты или потолок.");
   }
   if (profile.place === "alicante" && profile.want === "beach") {
-    list.push("Сравни Сан-Хуан с Эль-Кампельо в один день: трамвай L1, посёлок и пляж посёлка. Мучависту не принимай за экономию.");
+    list.push("Сравни Playa de San Juan с El Campello в один день: трамвай L1, посёлок и пляж посёлка. Playa Muchavista не принимай за экономию.");
   } else if (profile.place === "campello") {
-    list.push("Не путай посёлок, пляж Кампельо и Мучависту. Три разных рынка. Один день — три прогулки.");
+    list.push("Не путай посёлок, пляж El Campello и Playa Muchavista. Три разных рынка. Один день — три прогулки.");
   } else {
     list.push(
       "В объявлении сразу закрывай: без лифта выше второго, «инвест», метры без плана, фото только заката.",

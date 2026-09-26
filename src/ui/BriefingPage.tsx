@@ -14,8 +14,8 @@ const WANTS: { id: LifeWant; label: string }[] = [
 ];
 
 const PLACES: { id: PlaceId; label: string }[] = [
-  { id: "alicante", label: "Аликанте" },
-  { id: "campello", label: "Эль-Кампельо" },
+  { id: "alicante", label: "Alicante" },
+  { id: "campello", label: "El Campello" },
 ];
 
 const LISTING_SEED: Record<PlaceId, string> = {
@@ -261,7 +261,7 @@ export function BriefingPage() {
                 <p className="ord">
                   {i + 1}. {letStamp(fit)}
                 </p>
-                <h2>{fit.district.nameRu}</h2>
+                <h2>{fit.district.nameEs}</h2>
                 <p className="body">{fit.district.character}</p>
                 <p className="price">
                   Купить похожую квартиру: около {formatEur(fit.typicalAskEur)}. Жилец за твои метры — примерно{" "}
@@ -286,7 +286,7 @@ export function BriefingPage() {
               <p className="ord">
                 {i + 1}. {stamp(fit)}
               </p>
-              <h2>{fit.district.nameRu}</h2>
+              <h2>{fit.district.nameEs}</h2>
               <p className="body">{fit.district.character}</p>
               <p className="price">
                 Похожая квартира в этом районе: около {formatEur(fit.typicalAskEur)}. Чтобы заехать, сверху налог —
@@ -354,7 +354,7 @@ export function BriefingPage() {
             >
               {placeDistricts.map((d) => (
                 <option key={d.id} value={d.id}>
-                  {d.nameRu}
+                  {d.nameEs}
                 </option>
               ))}
             </select>

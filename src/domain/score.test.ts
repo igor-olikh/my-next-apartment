@@ -87,7 +87,7 @@ describe("owner-occupier scoring", () => {
     const c = buildBriefing(quiet).verdict;
     expect(a).not.toEqual(b);
     expect(b).not.toEqual(c);
-    expect(a.toLowerCase()).toMatch(/город|беналуа|энсанче|меркадо|пла-дель/);
+    expect(a.toLowerCase()).toMatch(/город|benalúa|ensanche|mercado|pla del/);
   });
 
   it("impossible beach budget says so", () => {
@@ -122,7 +122,39 @@ describe("owner-occupier scoring", () => {
     expect(beach).not.toContain("muchavista");
     expect(beach.some((id) => ["campello-playa", "coveta-fuma", "acantilado-lanuza"].includes(id))).toBe(true);
     const memo = buildBriefing({ ...camp, want: "beach", hasCar: true }).verdict;
-    expect(memo.toLowerCase()).toMatch(/кампельо|мучависта/);
+    expect(memo.toLowerCase()).toMatch(/campello|muchavista/);
+  });
+
+  it("district and city names use the map spelling", () => {
+    const banned = [
+      "Энсанче",
+      "Депутасьон",
+      "Меркадо",
+      "Беналуа",
+      "Аликанте",
+      "Кампельо",
+      "Мучависта",
+      "Сан-Хуан",
+      "Альбуферета",
+      "Каско",
+      "Кабо",
+    ];
+    const profiles: BuyerProfile[] = [
+      city,
+      beach,
+      quiet,
+      broke,
+      { ...DEFAULT_PROFILE, place: "campello" },
+      { ...DEFAULT_PROFILE, place: "campello", want: "beach", hasCar: true, maxBudgetEur: 320000 },
+      { ...DEFAULT_PROFILE, goal: "let" },
+      { ...DEFAULT_PROFILE, place: "campello", goal: "let" },
+    ];
+    for (const profile of profiles) {
+      const blob = JSON.stringify(buildBriefing(profile));
+      for (const word of banned) {
+        expect(blob.includes(word), `${word} in ${profile.place}/${profile.goal}/${profile.want}`).toBe(false);
+      }
+    }
   });
 
   it("let-mode listing shows gross yield for tenants, not a tourist play", () => {

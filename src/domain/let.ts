@@ -103,7 +103,7 @@ export function ignoredLet(profile: BuyerProfile, picks: LetFit[], cat: Catalog 
     const f = scoreLet(d, profile, cat);
     if (f.stamp !== "not_this" && f.stamp !== "caution") continue;
     if (f.stamp === "caution" && picks.some((p) => p.stamp === "caution")) continue;
-    lines.push(`${d.nameRu} — ${f.reasons[0] ?? d.trap}`);
+    lines.push(`${d.nameEs} — ${f.reasons[0] ?? d.trap}`);
   }
   lines.push("Пляж для гостей и «квартира под туристов» — не эта ставка.");
   lines.push("Процент грубый: ещё налог, пустые месяцы, ремонт дома.");
