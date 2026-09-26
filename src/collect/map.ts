@@ -35,5 +35,5 @@ export function mapFotocasaDistrict(name: string): { place: PlaceId; ids: string
 
 export const FOTOCASA_URLS: Record<PlaceId, string> = {
   alicante: "https://www.fotocasa.es/es/indice-precio-vivienda/alicante-alacant/todas-las-zonas",
-  campello: "https://www.fotocasa.es/es/indice-precio-vivienda/el-campello/todas-las-zonas",
+  campello: "https://www.fotocasa.es/es/indice-precio-vivienda/campello-el/todas-las-zonas",
 };

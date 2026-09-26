@@ -57,11 +57,11 @@ export const SOURCES = [
     url: "https://www.fotocasa.es/es/indice-precio-vivienda/alquiler/alicante-alacant/todas-las-zonas",
   },
   {
-    title: "Fotocasa: El Campello 3 345 €/м², август 2026",
-    url: "https://www.fotocasa.es/es/indice-precio-vivienda/el-campello/todas-las-zonas",
+    title: "Fotocasa: El Campello 3 350 €/м², сентябрь 2026",
+    url: "https://www.fotocasa.es/es/indice-precio-vivienda/campello-el/todas-las-zonas",
   },
   {
-    title: "Fotocasa: аренда El Campello 13 €/м², август 2026",
-    url: "https://www.fotocasa.es/es/indice-precio-vivienda/alquiler/el-campello/todas-las-zonas",
+    title: "Fotocasa: аренда El Campello 14 €/м², сентябрь 2026",
+    url: "https://www.fotocasa.es/es/indice-precio-vivienda/alquiler/campello-el/todas-las-zonas",
   },
 ];

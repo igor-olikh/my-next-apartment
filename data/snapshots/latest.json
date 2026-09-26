@@ -1,15 +1,15 @@
 {
-  "takenAt": "2026-08-20T05:34:47.212Z",
+  "takenAt": "2026-09-26T04:26:22.042Z",
   "source": "fotocasa",
   "places": {
     "alicante": {
-      "saleEurPerM2": 2699.95,
-      "rentEurPerM2": 14.2,
-      "asOf": "2026-08",
-      "yoyPct": 7.2,
-      "rentYoyPct": 5.9,
-      "threeMonthPct": 2.4,
-      "source": "Fotocasa Alicante / Alacant 2026-08",
+      "saleEurPerM2": 2706.19,
+      "rentEurPerM2": 14.29,
+      "asOf": "2026-09",
+      "yoyPct": 7.3,
+      "rentYoyPct": 7.6,
+      "threeMonthPct": 1.7,
+      "source": "Fotocasa Alicante | Alacant 2026-09",
       "districts": [
         {
           "id": "ensanche",
@@ -34,112 +34,112 @@
         {
           "id": "centro",
           "sourceName": "Centro",
-          "saleEurPerM2": 3709.95,
-          "rentEurPerM2": 14.17,
-          "yoyPct": 14.61,
-          "rentYoyPct": 6.86,
-          "asOf": "2026-08",
-          "source": "Fotocasa, Centro, 2026-08"
+          "saleEurPerM2": 3707.4,
+          "rentEurPerM2": 13.82,
+          "yoyPct": 12.57,
+          "rentYoyPct": 5.18,
+          "asOf": "2026-09",
+          "source": "Fotocasa, Centro, 2026-09"
         },
         {
           "id": "benalua",
           "sourceName": "Benalúa - Babel",
-          "saleEurPerM2": 2911.81,
-          "rentEurPerM2": 13.65,
-          "yoyPct": 23.97,
-          "rentYoyPct": 8.59,
-          "asOf": "2026-08",
-          "source": "Fotocasa, Benalúa - Babel, 2026-08"
+          "saleEurPerM2": 2978.51,
+          "rentEurPerM2": 12.98,
+          "yoyPct": 24.48,
+          "rentYoyPct": 1.01,
+          "asOf": "2026-09",
+          "source": "Fotocasa, Benalúa - Babel, 2026-09"
         },
         {
           "id": "pla-bon-repos",
           "sourceName": "Pla - Carolinas",
-          "saleEurPerM2": 2133.81,
-          "rentEurPerM2": 14.34,
-          "yoyPct": 10.21,
-          "rentYoyPct": 21.94,
-          "asOf": "2026-08",
-          "source": "Fotocasa, Pla - Carolinas, 2026-08"
+          "saleEurPerM2": 2125.23,
+          "rentEurPerM2": 13.97,
+          "yoyPct": 6.39,
+          "rentYoyPct": 16.61,
+          "asOf": "2026-09",
+          "source": "Fotocasa, Pla - Carolinas, 2026-09"
         },
         {
           "id": "san-blas",
           "sourceName": "San Blas",
-          "saleEurPerM2": 2893.45,
-          "rentEurPerM2": 12.05,
-          "yoyPct": 5.97,
-          "rentYoyPct": 12.2,
-          "asOf": "2026-08",
-          "source": "Fotocasa, San Blas, 2026-08"
+          "saleEurPerM2": 2829.03,
+          "rentEurPerM2": 11,
+          "yoyPct": 2.39,
+          "rentYoyPct": -0.09,
+          "asOf": "2026-09",
+          "source": "Fotocasa, San Blas, 2026-09"
         },
         {
           "id": "campoamor",
           "sourceName": "Campoamor - Altozano",
-          "saleEurPerM2": 2177.08,
-          "rentEurPerM2": 11.34,
-          "yoyPct": 10.44,
-          "rentYoyPct": -0.18,
-          "asOf": "2026-08",
-          "source": "Fotocasa, Campoamor - Altozano, 2026-08"
+          "saleEurPerM2": 2193.04,
+          "rentEurPerM2": 11.59,
+          "yoyPct": 10.86,
+          "rentYoyPct": 2.02,
+          "asOf": "2026-09",
+          "source": "Fotocasa, Campoamor - Altozano, 2026-09"
         },
         {
           "id": "carolinas",
           "sourceName": "Pla - Carolinas",
-          "saleEurPerM2": 2133.81,
-          "rentEurPerM2": 14.34,
-          "yoyPct": 10.21,
-          "rentYoyPct": 21.94,
-          "asOf": "2026-08",
-          "source": "Fotocasa, Pla - Carolinas, 2026-08"
+          "saleEurPerM2": 2125.23,
+          "rentEurPerM2": 13.97,
+          "yoyPct": 6.39,
+          "rentYoyPct": 16.61,
+          "asOf": "2026-09",
+          "source": "Fotocasa, Pla - Carolinas, 2026-09"
         },
         {
           "id": "albufereta",
           "sourceName": "Playa de San Juan - El Cabo de las Huertas",
-          "saleEurPerM2": 3700.4,
-          "rentEurPerM2": 15.37,
-          "yoyPct": 2.98,
-          "rentYoyPct": 6.15,
-          "asOf": "2026-08",
-          "source": "Fotocasa, Playa de San Juan - El Cabo de las Huertas, 2026-08"
+          "saleEurPerM2": 3740.77,
+          "rentEurPerM2": 15.14,
+          "yoyPct": 4.17,
+          "rentYoyPct": 3.34,
+          "asOf": "2026-09",
+          "source": "Fotocasa, Playa de San Juan - El Cabo de las Huertas, 2026-09"
         },
         {
           "id": "cabo-huertas",
           "sourceName": "Playa de San Juan - El Cabo de las Huertas",
-          "saleEurPerM2": 3700.4,
-          "rentEurPerM2": 15.37,
-          "yoyPct": 2.98,
-          "rentYoyPct": 6.15,
-          "asOf": "2026-08",
-          "source": "Fotocasa, Playa de San Juan - El Cabo de las Huertas, 2026-08"
+          "saleEurPerM2": 3740.77,
+          "rentEurPerM2": 15.14,
+          "yoyPct": 4.17,
+          "rentYoyPct": 3.34,
+          "asOf": "2026-09",
+          "source": "Fotocasa, Playa de San Juan - El Cabo de las Huertas, 2026-09"
         },
         {
           "id": "playa-san-juan",
           "sourceName": "Playa de San Juan - El Cabo de las Huertas",
-          "saleEurPerM2": 3700.4,
-          "rentEurPerM2": 15.37,
-          "yoyPct": 2.98,
-          "rentYoyPct": 6.15,
-          "asOf": "2026-08",
-          "source": "Fotocasa, Playa de San Juan - El Cabo de las Huertas, 2026-08"
+          "saleEurPerM2": 3740.77,
+          "rentEurPerM2": 15.14,
+          "yoyPct": 4.17,
+          "rentYoyPct": 3.34,
+          "asOf": "2026-09",
+          "source": "Fotocasa, Playa de San Juan - El Cabo de las Huertas, 2026-09"
         },
         {
           "id": "vistahermosa",
           "sourceName": "Garbinet - Vistahermosa",
-          "saleEurPerM2": 2726.38,
-          "rentEurPerM2": 12.04,
-          "yoyPct": 16.51,
-          "rentYoyPct": 1.09,
-          "asOf": "2026-08",
-          "source": "Fotocasa, Garbinet - Vistahermosa, 2026-08"
+          "saleEurPerM2": 2546.96,
+          "rentEurPerM2": 11.11,
+          "yoyPct": 11.21,
+          "rentYoyPct": -6.87,
+          "asOf": "2026-09",
+          "source": "Fotocasa, Garbinet - Vistahermosa, 2026-09"
         },
         {
           "id": "florida",
           "sourceName": "Florida - Ciudad de Asís",
-          "saleEurPerM2": 2240.26,
-          "rentEurPerM2": 11.81,
-          "yoyPct": 26.35,
-          "rentYoyPct": 0.17,
-          "asOf": "2026-08",
-          "source": "Fotocasa, Florida - Ciudad de Asís, 2026-08"
+          "saleEurPerM2": 2307.18,
+          "rentEurPerM2": 11.53,
+          "yoyPct": 29.74,
+          "rentYoyPct": -2.7,
+          "asOf": "2026-09",
+          "source": "Fotocasa, Florida - Ciudad de Asís, 2026-09"
         },
         {
           "id": "san-gabriel",
@@ -154,73 +154,73 @@
         {
           "id": "virgen-remedio",
           "sourceName": "Norte",
-          "saleEurPerM2": 1556.12,
-          "rentEurPerM2": 10.76,
-          "yoyPct": 27.48,
-          "rentYoyPct": 5.7,
-          "asOf": "2026-08",
-          "source": "Fotocasa, Norte, 2026-08"
+          "saleEurPerM2": 1558.96,
+          "rentEurPerM2": 9.62,
+          "yoyPct": 26.5,
+          "rentYoyPct": -6.69,
+          "asOf": "2026-09",
+          "source": "Fotocasa, Norte, 2026-09"
         }
       ]
     },
     "campello": {
-      "saleEurPerM2": 3344.67,
-      "rentEurPerM2": 13.42,
-      "asOf": "2026-08",
-      "yoyPct": 3.1,
-      "rentYoyPct": 2.8,
-      "threeMonthPct": 2,
-      "source": "Fotocasa El Campello 2026-08",
+      "saleEurPerM2": 3350.4,
+      "rentEurPerM2": 14,
+      "asOf": "2026-09",
+      "yoyPct": 2.2,
+      "rentYoyPct": 6,
+      "threeMonthPct": 1.1,
+      "source": "Fotocasa Campello (el) 2026-09",
       "districts": [
         {
           "id": "campello-pueblo",
           "sourceName": "Campello pueblo",
-          "saleEurPerM2": 2199.4,
-          "rentEurPerM2": 12.8,
-          "yoyPct": -0.78,
-          "rentYoyPct": 2.4,
-          "asOf": "2026-08",
-          "source": "Fotocasa, Campello pueblo, 2026-08"
+          "saleEurPerM2": 2228.33,
+          "rentEurPerM2": 13.16,
+          "yoyPct": -1.57,
+          "rentYoyPct": 5.7,
+          "asOf": "2026-09",
+          "source": "Fotocasa, Campello pueblo, 2026-09"
         },
         {
           "id": "campello-playa",
           "sourceName": "Campello Playa",
-          "saleEurPerM2": 3305.37,
-          "rentEurPerM2": 12.56,
-          "yoyPct": 1.32,
-          "rentYoyPct": -0.55,
-          "asOf": "2026-08",
-          "source": "Fotocasa, Campello Playa, 2026-08"
+          "saleEurPerM2": 3279.22,
+          "rentEurPerM2": 13.18,
+          "yoyPct": 0.33,
+          "rentYoyPct": 4.77,
+          "asOf": "2026-09",
+          "source": "Fotocasa, Campello Playa, 2026-09"
         },
         {
           "id": "muchavista",
           "sourceName": "Playa Muchavista",
-          "saleEurPerM2": 4532.42,
-          "rentEurPerM2": 14.77,
-          "yoyPct": 16.61,
-          "rentYoyPct": -5.56,
-          "asOf": "2026-08",
-          "source": "Fotocasa, Playa Muchavista, 2026-08"
+          "saleEurPerM2": 4498.03,
+          "rentEurPerM2": 16.16,
+          "yoyPct": 15.64,
+          "rentYoyPct": 2.08,
+          "asOf": "2026-09",
+          "source": "Fotocasa, Playa Muchavista, 2026-09"
         },
         {
           "id": "coveta-fuma",
           "sourceName": "Pueblo Español - Coveta Fumá",
-          "saleEurPerM2": 3346.19,
-          "rentEurPerM2": 13.22,
-          "yoyPct": 24.79,
-          "rentYoyPct": 7.48,
-          "asOf": "2026-08",
-          "source": "Fotocasa, Pueblo Español - Coveta Fumá, 2026-08"
+          "saleEurPerM2": 3397.42,
+          "rentEurPerM2": 13.15,
+          "yoyPct": 29.5,
+          "rentYoyPct": 1.39,
+          "asOf": "2026-09",
+          "source": "Fotocasa, Pueblo Español - Coveta Fumá, 2026-09"
         },
         {
           "id": "acantilado-lanuza",
           "sourceName": "Pueblo Acantilado - Lanuza",
-          "saleEurPerM2": 2932.86,
-          "rentEurPerM2": 13.56,
-          "yoyPct": -5.68,
-          "rentYoyPct": 3.91,
-          "asOf": "2026-08",
-          "source": "Fotocasa, Pueblo Acantilado - Lanuza, 2026-08"
+          "saleEurPerM2": 2955.56,
+          "rentEurPerM2": 14.15,
+          "yoyPct": -8.65,
+          "rentYoyPct": 6.95,
+          "asOf": "2026-09",
+          "source": "Fotocasa, Pueblo Acantilado - Lanuza, 2026-09"
         }
       ]
     }
