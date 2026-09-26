@@ -207,6 +207,12 @@ select {
   margin: 0.15rem 0 0;
 }
 
+.district h2 a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
 .es {
   margin: 0 0 0.55rem;
   font-size: 0.9rem;

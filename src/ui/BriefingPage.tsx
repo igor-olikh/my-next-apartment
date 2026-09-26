@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { mapsUrl } from "../data/maps";
 import { SOURCES } from "../data/market";
 import { buildBriefing } from "../domain/briefing";
 import { cashToMoveIn, formatEur, formatM2, formatMonth, formatPct } from "../domain/money";
@@ -261,7 +262,11 @@ export function BriefingPage() {
                 <p className="ord">
                   {i + 1}. {letStamp(fit)}
                 </p>
-                <h2>{fit.district.nameEs}</h2>
+                <h2>
+                  <a href={mapsUrl(fit.district.id)} target="_blank" rel="noreferrer">
+                    {fit.district.nameEs}
+                  </a>
+                </h2>
                 <p className="body">{fit.district.character}</p>
                 <p className="price">
                   Купить похожую квартиру: около {formatEur(fit.typicalAskEur)}. Жилец за твои метры — примерно{" "}
@@ -286,7 +291,11 @@ export function BriefingPage() {
               <p className="ord">
                 {i + 1}. {stamp(fit)}
               </p>
-              <h2>{fit.district.nameEs}</h2>
+              <h2>
+                <a href={mapsUrl(fit.district.id)} target="_blank" rel="noreferrer">
+                  {fit.district.nameEs}
+                </a>
+              </h2>
               <p className="body">{fit.district.character}</p>
               <p className="price">
                 Похожая квартира в этом районе: около {formatEur(fit.typicalAskEur)}. Чтобы заехать, сверху налог —
